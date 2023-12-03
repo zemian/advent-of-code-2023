@@ -9,14 +9,15 @@ public class Day1 {
         run();
     }
     public static void run() throws Exception {
+        var numbers = new ArrayList<Integer>();
+        var firstDigitPattern = Pattern.compile("(\\d)");
+        var lastDigitPattern = Pattern.compile(".*(\\d)");
+
         var inputFilename = "Day1-input.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {
             String line;
-            var numbers = new ArrayList<Integer>();
-            var firstDigitPattern = Pattern.compile("(\\d)");
-            var lastDigitPattern = Pattern.compile(".*(\\d)");
             while ((line = reader.readLine()) != null) {
                 if (!line.isBlank()) {
                     String lineNum = "";

@@ -7,14 +7,15 @@ import java.util.regex.Pattern;
 
 public class Day1b {
     public static void main(String[] args) throws Exception {
+        var numbers = new ArrayList<Integer>();
+        var firstDigitPattern = Pattern.compile("(\\d|one|two|three|four|five|six|seven|eight|nine)");
+        var lastDigitPattern = Pattern.compile(".*(\\d|one|two|three|four|five|six|seven|eight|nine)");
+
         var inputFilename = "Day1-input.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {
             String line;
-            var numbers = new ArrayList<Integer>();
-            var firstDigitPattern = Pattern.compile("(\\d|one|two|three|four|five|six|seven|eight|nine)");
-            var lastDigitPattern = Pattern.compile(".*(\\d|one|two|three|four|five|six|seven|eight|nine)");
             while ((line = reader.readLine()) != null) {
                 if (!line.isBlank()) {
                     String lineNum = "";

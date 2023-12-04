@@ -1,3 +1,5 @@
+package aoc2023;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
@@ -11,7 +13,7 @@ public class Day2 {
         var availableCubes = Map.of("red", 12, "green", 13, "blue", 14);
         var possibleGameIds = new ArrayList<Integer>();
 
-        var inputFilename = "Day2-input.txt";
+        var inputFilename = "aoc2023/Day2-input.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {

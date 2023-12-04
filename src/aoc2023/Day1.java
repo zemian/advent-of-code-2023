@@ -1,3 +1,5 @@
+package aoc2023;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ public class Day1 {
         var firstDigitPattern = Pattern.compile("(\\d)");
         var lastDigitPattern = Pattern.compile(".*(\\d)");
 
-        var inputFilename = "Day1-input.txt";
+        var inputFilename = "aoc2023/Day1-input.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {

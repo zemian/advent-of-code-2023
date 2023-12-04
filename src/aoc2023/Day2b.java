@@ -1,9 +1,10 @@
+package aoc2023;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Day2b {
     public static void main(String[] args) throws Exception {
@@ -13,7 +14,7 @@ public class Day2b {
     public static void run() throws Exception {
         var powerNums = new ArrayList<Integer>();
 
-        var inputFilename = "Day2-input.txt";
+        var inputFilename = "aoc2023/Day2-input.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {

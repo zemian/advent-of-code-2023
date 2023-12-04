@@ -2,6 +2,5 @@ Java Project to solve https://adventofcode.com/ puzzles
 
 ## How to Run
 
-NOTE: I will be using IntelliJ IDEA as Java project using JDK 21. So
-not build script is needed. Just right click on each puzzle source file
-and use IDEA to run it.
+This project does not have build script. It uses IntelliJ IDEA to open as simple
+Java project setup using JDK 21. All puzzles are build and run inside IDE.

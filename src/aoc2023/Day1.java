@@ -15,7 +15,7 @@ public class Day1 {
         var firstDigitPattern = Pattern.compile("(\\d)");
         var lastDigitPattern = Pattern.compile(".*(\\d)");
 
-        var inputFilename = "aoc2023/Day1-input.txt";
+        var inputFilename = "aoc2023/Day1-input2.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {

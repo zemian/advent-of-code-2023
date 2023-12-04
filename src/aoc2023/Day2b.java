@@ -14,7 +14,7 @@ public class Day2b {
     public static void run() throws Exception {
         var powerNums = new ArrayList<Integer>();
 
-        var inputFilename = "aoc2023/Day2-input.txt";
+        var inputFilename = "aoc2023/Day2-input2.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {

@@ -31,6 +31,7 @@ public class Day1b {
                     }
                     Integer num = Integer.parseInt(lineNum);
                     numbers.add(num);
+                    System.out.println(num + " < " + line);
                 }
             }
             //System.out.println(numbers);

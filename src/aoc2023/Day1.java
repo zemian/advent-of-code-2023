@@ -33,6 +33,7 @@ public class Day1 {
                     }
                     Integer num = Integer.parseInt(lineNum);
                     numbers.add(num);
+                    System.out.println(num + " < " + line);
                 }
             }
             int sum = numbers.stream().reduce(0, Integer::sum);

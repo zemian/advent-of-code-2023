@@ -5,8 +5,8 @@ import java.util.regex.Pattern;
 
 public class Day1 {
     public static void main(String[] args) throws Exception {
-        //testFirstAndLastDigit();
         run();
+        //testParseLine();
     }
     public static void run() throws Exception {
         var numbers = new ArrayList<Integer>();
@@ -39,7 +39,7 @@ public class Day1 {
         }
     }
 
-    public static void testFirstAndLastDigit() throws Exception {
+    public static void testParseLine() throws Exception {
         // Test regex to get first and last digit.
         var s = "sdpgz3five4seven6fiveh";
         var p = Pattern.compile(".*(\\d)");

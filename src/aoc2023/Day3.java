@@ -47,7 +47,7 @@ public class Day3 {
                         //System.out.println("\nFound PartNum: " + numLoc.partNum);
                         if (hasSymbolAround(grid, numLoc)) {
                             partNums.add(numLoc.partNum);
-                            System.out.println("Found PartNum: " + numLoc.partNum + "  with symbol");
+                            System.out.println("Found PartNum: " + numLoc.partNum + " with symbol");
                         }
                         j = numLoc.endj;
                     }

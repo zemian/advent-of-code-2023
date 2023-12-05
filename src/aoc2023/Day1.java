@@ -18,6 +18,7 @@ public class Day1 {
         }
     }
     public Object runMain(String inputFilename) throws Exception {
+        System.out.println("Processing input: " + inputFilename);
         var numbers = new ArrayList<Integer>();
         var firstDigitPattern = Pattern.compile("(\\d)");
         var lastDigitPattern = Pattern.compile(".*(\\d)");

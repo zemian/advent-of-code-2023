@@ -80,6 +80,7 @@ public class Day3 {
     }
 
     private Object runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
+        System.out.println("Processing input: " + inputFilename + "with grid size " + gridRowSize + ", " + gridColSize);
         var startTime = Instant.now();
         var partNums = new ArrayList<Integer>();
         char[][] grid = new char[gridRowSize][gridColSize];
@@ -116,7 +117,6 @@ public class Day3 {
                     }
                 }
             }
-            System.out.println("\n");
         }
 
         var sum = partNums.stream().reduce(0, Integer::sum);

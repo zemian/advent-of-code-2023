@@ -60,7 +60,8 @@ public class Day3b {
                 }
             }
 
-            // Find part nums next to a symbol
+            // Find pair of part nums next to a symbol that's connected
+            // We will calculate the power of these two and the sum of all later.
             var symbolNumLocMap = new HashMap<String, NumLoc>();
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid[i].length; j++) {

@@ -26,7 +26,41 @@ public class Day3b {
     }
 
     private void runTests() throws Exception {
+        testFindNumLocWithSymbol();
         testMain();
+    }
+
+    private void testFindNumLocWithSymbol() {
+        char[][] grid = new char[][] {
+                ".....".toCharArray(),
+                ".467.".toCharArray(),
+                "..*..".toCharArray(),
+        };
+        var numLoc = findNumLoc(grid, 1, 1);
+        hasSymbolAround(grid, numLoc); // This must call to populate the symbol location
+        assertEquals(numLoc.partNum, 467);
+        assertEquals(numLoc.i, 1);
+        assertEquals(numLoc.j, 1);
+        assertEquals(numLoc.endj, 4);
+        assertEquals(numLoc.symbol, '*');
+        assertEquals(numLoc.si, 2);
+        assertEquals(numLoc.sj, 2);
+
+        // This use case was not handled and cause the program to go into infinite loop!
+        grid = new char[][] {
+                ".....".toCharArray(),
+                "..467".toCharArray(),
+                "....$".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 2);
+        hasSymbolAround(grid, numLoc); // This must call to populate the symbol location
+        assertEquals(numLoc.partNum, 467);
+        assertEquals(numLoc.i, 1);
+        assertEquals(numLoc.j, 2);
+        assertEquals(numLoc.endj, 4);
+        assertEquals(numLoc.symbol, '$');
+        assertEquals(numLoc.si, 2);
+        assertEquals(numLoc.sj, 4);
     }
 
     private void testMain() throws Exception {

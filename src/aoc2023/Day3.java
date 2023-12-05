@@ -28,6 +28,7 @@ public class Day3 {
     }
 
     private void testFindNumLoc() {
+        // Find partNum in middle of grid
         char[][] grid = new char[][] {
                 ".....".toCharArray(),
                 ".467.".toCharArray(),
@@ -37,6 +38,31 @@ public class Day3 {
         assertEquals(numLoc.partNum, 467);
         assertEquals(numLoc.i, 1);
         assertEquals(numLoc.j, 1);
+        assertEquals(numLoc.endj, 4);
+
+        // Find partNum on left side of the grid
+        grid = new char[][] {
+                ".....".toCharArray(),
+                "467..".toCharArray(),
+                ".....".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 0);
+        assertEquals(numLoc.partNum, 467);
+        assertEquals(numLoc.i, 1);
+        assertEquals(numLoc.j, 0);
+        assertEquals(numLoc.endj, 3);
+
+        // Find partNum on right side of the grid
+        // This use case was not handled and cause the program to go into infinite loop!
+        grid = new char[][] {
+                ".....".toCharArray(),
+                "..467".toCharArray(),
+                ".....".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 2);
+        assertEquals(numLoc.partNum, 467);
+        assertEquals(numLoc.i, 1);
+        assertEquals(numLoc.j, 2);
         assertEquals(numLoc.endj, 4);
     }
 

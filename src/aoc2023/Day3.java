@@ -2,16 +2,19 @@ package aoc2023;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Day3 {
     public static void main(String[] args) throws Exception {
-        System.out.println("Start time: " + new Date());
+        var startTime = Instant.now();
         var partNums = new ArrayList<Integer>();
-        //char[][] grid = new char[10][10];
-        char[][] grid = new char[140][140];
-        var inputFilename = "aoc2023/Day3-input2.txt";
+        char[][] grid = new char[10][10]; // input1
+        var inputFilename = "aoc2023/Day3-input1.txt";
+//        char[][] grid = new char[140][140]; // input2
+//        var inputFilename = "aoc2023/Day3-input2.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {
@@ -48,7 +51,7 @@ public class Day3 {
 
         var sum = partNums.stream().reduce(0, Integer::sum);
         System.out.println("Sum: " + sum);
-        System.out.println("Start stop: " + new Date());
+        System.out.println("Time: " + (Duration.between(startTime, Instant.now())));
     }
 
     private static boolean hasSymbolAround(char[][] grid, NumLoc n) {
@@ -99,7 +102,8 @@ public class Day3 {
         numLoc.i = i;
         numLoc.j = j;
         String partNum = "";
-        for (int k = j; k < grid[i].length; k++) {
+        int k;
+        for (k = j; k < grid[i].length; k++) {
             var nextChar = grid[i][k];
             if (Character.isDigit(nextChar)) {
                 partNum += nextChar;
@@ -109,6 +113,12 @@ public class Day3 {
                 break;
             }
         }
+        // Ensure partNum on end of line is captured properly
+        if (k == grid[i].length) {
+            numLoc.partNum = Integer.parseInt(partNum);
+            numLoc.endj = k;
+        }
+
         return numLoc;
     }
     public static class NumLoc {

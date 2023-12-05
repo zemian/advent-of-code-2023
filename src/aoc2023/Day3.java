@@ -15,11 +15,11 @@ public class Day3 {
 //        char[][] grid = new char[10][10]; // input1
 //        var inputFilename = "aoc2023/Day3-input1.txt";
 
-        char[][] grid = new char[11][10]; // input1
-        var inputFilename = "aoc2023/Day3-input1b.txt";
+//        char[][] grid = new char[11][10]; // input1
+//        var inputFilename = "aoc2023/Day3-input1b.txt";
 
-//        char[][] grid = new char[140][140]; // input2
-//        var inputFilename = "aoc2023/Day3-input2.txt";
+        char[][] grid = new char[140][140]; // input2
+        var inputFilename = "aoc2023/Day3-input2.txt";
 
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
@@ -44,15 +44,16 @@ public class Day3 {
                     char val = grid[i][j];
                     if (Character.isDigit(val)) {
                         var numLoc = findNumLoc(grid, i, j);
-                        //System.out.println("PartNum: " + numLoc.partNum);
+                        System.out.print("\nFound PartNum: " + numLoc.partNum);
                         if (hasSymbolAround(grid, numLoc)) {
                             partNums.add(numLoc.partNum);
-                            System.out.println("PartNum: " + numLoc.partNum);
+                            System.out.print("  + SYMBOL");
                         }
                         j = numLoc.endj;
                     }
                 }
             }
+            System.out.println("\n");
         }
 
         var sum = partNums.stream().reduce(0, Integer::sum);
@@ -86,7 +87,7 @@ public class Day3 {
         }
 
         // Check row below partNum (including diagonal position)
-        rowIndex = (n.i < grid[0].length) ? n.i + 1 : n.i;
+        rowIndex = (n.i < grid[0].length - 1) ? n.i + 1 : n.i;
         colIndex = (n.j > 0) ? n.j - 1 : n.j;
         colEndIndex = (n.endj > grid[0].length) ? n.endj + 1 : n.endj;
         for (int i = colIndex; i <= colEndIndex; i++) {

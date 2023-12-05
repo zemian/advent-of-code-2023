@@ -7,8 +7,67 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static aoc2023.TestUtils.assertEquals;
+
 public class Day1b {
     public static void main(String[] args) throws Exception {
+        var program = new Day1b();
+        if (args.length > 0 && args[0].equals("test")) {
+            program.runTests();
+            System.out.println("Tests passed.");
+        } else {
+            program.runMain();
+        }
+    }
+
+    public void runTests() throws Exception {
+        testRegexOnDigitOrWord();
+        testConvertNumWordToVal();
+        testMain();
+    }
+
+    private void testConvertNumWordToVal() {
+        assertEquals(convertNum("one"), "1");
+        var words = "one|two|three|four|five|six|seven|eight|nine".split("\\|");
+        for (int i = 0; i < words.length; i++) {
+            assertEquals(convertNum(words[i]), "" + (i + 1));
+        }
+    }
+
+    public void testMain() throws Exception {
+        Integer sum = (Integer)runMain();
+        assertEquals(sum, 54019);
+    }
+
+    private void testRegexOnDigitOrWord() {
+        // Test regex to get first digit.
+        var s = "sdpgz3five4seven6fiveh";
+        var p = Pattern.compile("(\\d|one|two|three|four|five|six|seven|eight|nine)");
+        var m = p.matcher(s);
+        m.find();
+        assertEquals(m.group(1), "3");
+
+        s = "sdpgzfive4seven6fiveh";
+        p = Pattern.compile("(\\d|one|two|three|four|five|six|seven|eight|nine)");
+        m = p.matcher(s);
+        m.find();
+        assertEquals(m.group(1), "five");
+
+        // Test regex to get last digit
+        s = "sdpgzfive4seven6fiveh";
+        p = Pattern.compile(".*(\\d|one|two|three|four|five|six|seven|eight|nine)");
+        m = p.matcher(s);
+        m.find();
+        assertEquals(m.group(1), "five");
+
+        s = "sdpgzfive4seven6h";
+        p = Pattern.compile(".*(\\d|one|two|three|four|five|six|seven|eight|nine)");
+        m = p.matcher(s);
+        m.find();
+        assertEquals(m.group(1), "6");
+    }
+
+    public Object runMain() throws Exception {
         var numbers = new ArrayList<Integer>();
         var firstDigitPattern = Pattern.compile("(\\d|one|two|three|four|five|six|seven|eight|nine)");
         var lastDigitPattern = Pattern.compile(".*(\\d|one|two|three|four|five|six|seven|eight|nine)");
@@ -37,6 +96,8 @@ public class Day1b {
             //System.out.println(numbers);
             int sum = numbers.stream().reduce(0, Integer::sum);
             System.out.println("Sum: " + sum);
+
+            return sum;
         }
     }
 
@@ -46,7 +107,7 @@ public class Day1b {
         numToValMap.putAll(Map.of("four", "4", "five", "5", "six", "6"));
         numToValMap.putAll(Map.of("seven", "7", "eight", "8", "nine", "9"));
     }
-    private static String convertNum(String num) {
+    public String convertNum(String num) {
         return (num.length() == 1) ? num : numToValMap.get(num);
     }
 }

@@ -5,12 +5,19 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import static aoc2023.TestUtils.assertEquals;
+
 public class Day1 {
     public static void main(String[] args) throws Exception {
-        run();
-        //testParseLine();
+        var program = new Day1();
+        if (args.length > 0 && args[0].equals("test")) {
+            program.runTests();
+            System.out.println("Tests passed.");
+        } else {
+            program.runMain();
+        }
     }
-    public static void run() throws Exception {
+    public Object runMain() throws Exception {
         var numbers = new ArrayList<Integer>();
         var firstDigitPattern = Pattern.compile("(\\d)");
         var lastDigitPattern = Pattern.compile(".*(\\d)");
@@ -38,21 +45,40 @@ public class Day1 {
             }
             int sum = numbers.stream().reduce(0, Integer::sum);
             System.out.println("Sum: " + sum);
+
+            return sum;
         }
     }
 
-    public static void testParseLine() throws Exception {
-        // Test regex to get first and last digit.
+    public void runTests() throws Exception {
+        testRegexOnDigits();
+        testMain();
+    }
+
+    public void testMain() throws Exception {
+        Integer sum = (Integer)runMain();
+        assertEquals(sum, 54632);
+    }
+
+    public void testRegexOnDigits() {
+        // Test regex to get first digit.
         var s = "sdpgz3five4seven6fiveh";
-        var p = Pattern.compile(".*(\\d)");
+        var p = Pattern.compile("(\\d)");
         var m = p.matcher(s);
         m.find();
-        System.out.println(m.group(1));
+        assertEquals(m.group(1), "3");
+
+        // Test regex to get last digit.
+        s = "sdpgz3five4seven6fiveh";
+        p = Pattern.compile(".*(\\d)");
+        m = p.matcher(s);
+        m.find();
+        assertEquals(m.group(1), "6");
 
         s = "sdpgz3";
         p = Pattern.compile(".*(\\d)");
         m = p.matcher(s);
         m.find();
-        System.out.println(m.group(1));
+        assertEquals(m.group(1), "3");
     }
 }

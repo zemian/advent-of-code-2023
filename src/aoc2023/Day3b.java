@@ -72,8 +72,6 @@ public class Day3b {
         var sum = powerNums.stream().reduce(0, Integer::sum);
         System.out.println("Sum: " + sum);
         System.out.println("Time: " + (Duration.between(startTime, Instant.now())));
-
-        // 530719969
     }
 
     // Part Two requires us to find and store the symbol grid location

@@ -56,7 +56,6 @@ public class Day2b {
 
         var sum = powerNums.stream().reduce(0, Integer::sum);
         System.out.println("Sum: " + sum);
-        // 3035
     }
     public static void testParseLine() throws Exception {
         // Test regex to get first and last digit.

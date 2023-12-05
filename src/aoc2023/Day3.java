@@ -59,8 +59,6 @@ public class Day3 {
         var sum = partNums.stream().reduce(0, Integer::sum);
         System.out.println("Sum: " + sum);
         System.out.println("Time: " + (Duration.between(startTime, Instant.now())));
-
-        // 540025
     }
 
     private static boolean hasSymbolAround(char[][] grid, NumLoc n) {

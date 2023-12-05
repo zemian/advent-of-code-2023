@@ -37,7 +37,6 @@ public class Day1b {
             //System.out.println(numbers);
             int sum = numbers.stream().reduce(0, Integer::sum);
             System.out.println("Sum: " + sum);
-            // 54019
         }
     }
 

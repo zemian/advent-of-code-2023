@@ -17,7 +17,7 @@ public class Day2 {
         }
     }
 
-    private Object runMain(String inputFilename) throws Exception {
+    private Integer runMain(String inputFilename) throws Exception {
         System.out.println("Processing input: " + inputFilename);
         var availableCubes = Map.of("red", 12, "green", 13, "blue", 14);
         var possibleGameIds = new ArrayList<Integer>();
@@ -71,10 +71,10 @@ public class Day2 {
     }
 
     private void testMain() throws Exception {
-        Integer sum = (Integer)runMain("aoc2023/Day2-input1.txt");
+        Integer sum = runMain("aoc2023/Day2-input1.txt");
         assertEquals(sum, 8);
 
-        sum = (Integer)runMain("aoc2023/Day2-input2.txt");
+        sum = runMain("aoc2023/Day2-input2.txt");
         assertEquals(sum, 3035);
     }
 

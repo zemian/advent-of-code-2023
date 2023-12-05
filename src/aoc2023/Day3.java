@@ -69,17 +69,17 @@ public class Day3 {
     }
 
     private void testMain() throws Exception {
-        Integer sum = (Integer)runMain("aoc2023/Day3-input1.txt", 10, 10);
+        Integer sum = runMain("aoc2023/Day3-input1.txt", 10, 10);
         assertEquals(sum, 4361);
 
-        sum = (Integer)runMain("aoc2023/Day3-input1b.txt", 11, 10);
+        sum = runMain("aoc2023/Day3-input1b.txt", 11, 10);
         assertEquals(sum, 4361);
 
-        sum = (Integer)runMain("aoc2023/Day3-input2.txt", 140, 140);
+        sum = runMain("aoc2023/Day3-input2.txt", 140, 140);
         assertEquals(sum, 540025);
     }
 
-    private Object runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
+    private Integer runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
         System.out.println("Processing input: " + inputFilename + "with grid size " + gridRowSize + ", " + gridColSize);
         var startTime = Instant.now();
         var partNums = new ArrayList<Integer>();

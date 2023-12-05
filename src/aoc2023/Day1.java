@@ -18,7 +18,7 @@ public class Day1 {
         }
     }
 
-    private Object runMain(String inputFilename) throws Exception {
+    private Integer runMain(String inputFilename) throws Exception {
         System.out.println("Processing input: " + inputFilename);
         var numbers = new ArrayList<Integer>();
         var firstDigitPattern = Pattern.compile("(\\d)");
@@ -56,10 +56,10 @@ public class Day1 {
     }
 
     private void testMain() throws Exception {
-        Integer sum = (Integer)runMain("aoc2023/Day1-input1.txt");
+        Integer sum = runMain("aoc2023/Day1-input1.txt");
         assertEquals(sum, 142);
 
-        sum = (Integer)runMain("aoc2023/Day1-input2.txt");
+        sum = runMain("aoc2023/Day1-input2.txt");
         assertEquals(sum, 54632);
     }
 

@@ -30,14 +30,14 @@ public class Day3b {
     }
 
     private void testMain() throws Exception {
-        Integer sum = (Integer)runMain("aoc2023/Day3-input1.txt", 10, 10);
+        Integer sum = runMain("aoc2023/Day3-input1.txt", 10, 10);
         assertEquals(sum, 467835);
 
-        sum = (Integer)runMain("aoc2023/Day3-input2.txt", 140, 140);
+        sum = runMain("aoc2023/Day3-input2.txt", 140, 140);
         assertEquals(sum, 84584891);
     }
 
-    private Object runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
+    private Integer runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
         System.out.println("Processing input: " + inputFilename + "with grid size " + gridRowSize + ", " + gridColSize);
         var startTime = Instant.now();
         var powerNums = new ArrayList<Integer>();

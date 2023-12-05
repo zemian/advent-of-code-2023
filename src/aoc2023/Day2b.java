@@ -6,15 +6,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static aoc2023.TestUtils.assertEquals;
+
 public class Day2b {
     public static void main(String[] args) throws Exception {
-        run();
-        //testParseLine();
+        var program = new Day2b();
+        if (args.length > 0 && args[0].equals("test")) {
+            program.runTests();
+            System.out.println("Tests passed.");
+        } else {
+            program.runMain("aoc2023/Day2-input2.txt");
+        }
     }
-    public static void run() throws Exception {
+    public Object runMain(String inputFilename) throws Exception {
+        System.out.println("Processing input: " + inputFilename);
         var powerNums = new ArrayList<Integer>();
-
-        var inputFilename = "aoc2023/Day2-input2.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {
@@ -56,15 +62,19 @@ public class Day2b {
 
         var sum = powerNums.stream().reduce(0, Integer::sum);
         System.out.println("Sum: " + sum);
+
+        return sum;
     }
-    public static void testParseLine() throws Exception {
-        // Test regex to get first and last digit.
-        var s = "Game 1: 1 green, 1 blue, 1 red; 1 green, 8 red, 7 blue; 6 blue, 10 red; 4 red, 9 blue, 2 green; 1 green, 3 blue; 4 red, 1 green, 10 blue";
-        var gameParts = s.split(": ");
-        var setParts = gameParts[1].split("; ");
-        var cubesParts = setParts[0].split(", ");
-        System.out.println(gameParts[0]);
-        System.out.println(setParts[0]);
-        System.out.println(Arrays.asList(cubesParts));
+
+    public void runTests() throws Exception {
+        testMain();
+    }
+
+    private void testMain() throws Exception {
+        Integer sum = (Integer)runMain("aoc2023/Day2-input1.txt");
+        assertEquals(sum, 2286);
+
+        sum = (Integer)runMain("aoc2023/Day2-input2.txt");
+        assertEquals(sum, 66027);
     }
 }

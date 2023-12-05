@@ -4,16 +4,23 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import static aoc2023.TestUtils.assertEquals;
+
 public class Day2 {
     public static void main(String[] args) throws Exception {
-        run();
-        //testParseLine();
+        var program = new Day2();
+        if (args.length > 0 && args[0].equals("test")) {
+            program.runTests();
+            System.out.println("Tests passed.");
+        } else {
+            program.runMain("aoc2023/Day2-input2.txt");
+        }
     }
-    public static void run() throws Exception {
+    public Object runMain(String inputFilename) throws Exception {
+        System.out.println("Processing input: " + inputFilename);
         var availableCubes = Map.of("red", 12, "green", 13, "blue", 14);
         var possibleGameIds = new ArrayList<Integer>();
 
-        var inputFilename = "aoc2023/Day2-input2.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {
@@ -39,7 +46,7 @@ public class Day2 {
                         if (cubesCounts.getOrDefault("red", 0) > availableCubes.get("red")
                                 || cubesCounts.getOrDefault("green", 0) > availableCubes.get("green")
                                 || cubesCounts.getOrDefault("blue", 0) > availableCubes.get("blue")) {
-                            //System.out.println("Rejected> " + line);
+                            System.out.println("Rejected> " + line);
                             passed = false;
                             break;
                         }
@@ -53,15 +60,40 @@ public class Day2 {
 
         var sum = possibleGameIds.stream().reduce(0, Integer::sum);
         System.out.println("Sum: " + sum);
+
+        return sum;
     }
-    public static void testParseLine() throws Exception {
+
+    public void runTests() throws Exception {
+        testParseGameInput();
+        testMain();
+    }
+
+    private void testMain() throws Exception {
+        Integer sum = (Integer)runMain("aoc2023/Day2-input1.txt");
+        assertEquals(sum, 8);
+
+        sum = (Integer)runMain("aoc2023/Day2-input2.txt");
+        assertEquals(sum, 3035);
+    }
+
+    public void testParseGameInput() throws Exception {
         // Test regex to get first and last digit.
         var s = "Game 1: 1 green, 1 blue, 1 red; 1 green, 8 red, 7 blue; 6 blue, 10 red; 4 red, 9 blue, 2 green; 1 green, 3 blue; 4 red, 1 green, 10 blue";
         var gameParts = s.split(": ");
         var setParts = gameParts[1].split("; ");
         var cubesParts = setParts[0].split(", ");
-        System.out.println(gameParts[0]);
-        System.out.println(setParts[0]);
-        System.out.println(Arrays.asList(cubesParts));
+
+        assertEquals(gameParts[0], "Game 1");
+        assertEquals(setParts[0], "1 green, 1 blue, 1 red");
+        assertEquals(cubesParts[0], "1 green");
+        assertEquals(cubesParts[1], "1 blue");
+        assertEquals(cubesParts[2], "1 red");
+
+        // Test last set
+        cubesParts = setParts[setParts.length - 1].split(", ");
+        assertEquals(cubesParts[0], "4 red");
+        assertEquals(cubesParts[1], "1 green");
+        assertEquals(cubesParts[2], "10 blue");
     }
 }

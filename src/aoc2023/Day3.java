@@ -229,7 +229,7 @@ public class Day3 {
 
     private boolean hasSymbolAround(char[][] grid, NumLoc n) {
         // Check left of partNum
-        if (n.j >= 1) {
+        if (n.j > 0) {
             if (isSymbol(grid[n.i][n.j - 1])) {
                 return true;
             }

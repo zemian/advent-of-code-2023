@@ -132,7 +132,7 @@ public class Day3b {
     // Part Two requires us to find and store the symbol grid location
     private static boolean hasSymbolAround(char[][] grid, NumLoc n) {
         // Check left of partNum
-        if (n.j >= 1) {
+        if (n.j > 0) {
             if (isSymbol(grid[n.i][n.j - 1])) {
                 n.symbol = grid[n.i][n.j - 1];
                 n.si = n.i;

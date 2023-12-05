@@ -11,10 +11,16 @@ public class Day3 {
     public static void main(String[] args) throws Exception {
         var startTime = Instant.now();
         var partNums = new ArrayList<Integer>();
-        char[][] grid = new char[10][10]; // input1
-        var inputFilename = "aoc2023/Day3-input1.txt";
+
+//        char[][] grid = new char[10][10]; // input1
+//        var inputFilename = "aoc2023/Day3-input1.txt";
+
+        char[][] grid = new char[11][10]; // input1
+        var inputFilename = "aoc2023/Day3-input1b.txt";
+
 //        char[][] grid = new char[140][140]; // input2
 //        var inputFilename = "aoc2023/Day3-input2.txt";
+
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {
@@ -80,7 +86,7 @@ public class Day3 {
         }
 
         // Check row below partNum (including diagonal position)
-        rowIndex = (n.i < grid.length) ? n.i + 1 : n.i;
+        rowIndex = (n.i < grid[0].length) ? n.i + 1 : n.i;
         colIndex = (n.j > 0) ? n.j - 1 : n.j;
         colEndIndex = (n.endj > grid[0].length) ? n.endj + 1 : n.endj;
         for (int i = colIndex; i <= colEndIndex; i++) {
@@ -116,7 +122,7 @@ public class Day3 {
         // Ensure partNum on end of line is captured properly
         if (k == grid[i].length) {
             numLoc.partNum = Integer.parseInt(partNum);
-            numLoc.endj = k;
+            numLoc.endj = k - 1;
         }
 
         return numLoc;

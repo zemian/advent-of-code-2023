@@ -11,19 +11,36 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import static aoc2023.TestUtils.assertEquals;
+
 public class Day3b {
+
     public static void main(String[] args) throws Exception {
+        var program = new Day3b();
+        if (args.length > 0 && args[0].equals("test")) {
+            program.runTests();
+            System.out.println("Tests passed.");
+        } else {
+            program.runMain("aoc2023/Day3-input2.txt", 140, 140);
+        }
+    }
+
+    private void runTests() throws Exception {
+        testMain();
+    }
+
+    private void testMain() throws Exception {
+        Integer sum = (Integer)runMain("aoc2023/Day3-input1.txt", 10, 10);
+        assertEquals(sum, 467835);
+
+        sum = (Integer)runMain("aoc2023/Day3-input2.txt", 140, 140);
+        assertEquals(sum, 84584891);
+    }
+
+    public Object runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
         var startTime = Instant.now();
         var powerNums = new ArrayList<Integer>();
-
-//        char[][] grid = new char[10][10]; // input1
-//        var inputFilename = "aoc2023/Day3-input1.txt";
-
-//        char[][] grid = new char[11][10]; // input1
-//        var inputFilename = "aoc2023/Day3-input1b.txt";
-
-        char[][] grid = new char[140][140]; // input2
-        var inputFilename = "aoc2023/Day3-input2.txt";
+        char[][] grid = new char[gridRowSize][gridColSize];
 
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
@@ -72,6 +89,8 @@ public class Day3b {
         var sum = powerNums.stream().reduce(0, Integer::sum);
         System.out.println("Sum: " + sum);
         System.out.println("Time: " + (Duration.between(startTime, Instant.now())));
+
+        return sum;
     }
 
     // Part Two requires us to find and store the symbol grid location

@@ -7,19 +7,82 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static aoc2023.TestUtils.assertEquals;
+
 public class Day3 {
     public static void main(String[] args) throws Exception {
+        var program = new Day3();
+        if (args.length > 0 && args[0].equals("test")) {
+            program.runTests();
+            System.out.println("Tests passed.");
+        } else {
+            program.runMain("aoc2023/Day3-input2.txt", 140, 140);
+        }
+    }
+
+    private void runTests() throws Exception {
+        testFindNumLoc();
+        testIsSymbol();
+        testHasSymbolAround();
+        testMain();
+    }
+
+    private void testFindNumLoc() {
+        char[][] grid = new char[][] {
+                ".....".toCharArray(),
+                ".467.".toCharArray(),
+                ".....".toCharArray(),
+        };
+        var numLoc = findNumLoc(grid, 1, 1);
+        assertEquals(numLoc.partNum, 467);
+        assertEquals(numLoc.i, 1);
+        assertEquals(numLoc.j, 1);
+        assertEquals(numLoc.endj, 4);
+    }
+
+    private void testHasSymbolAround() {
+        char[][] grid = new char[][] {
+                "..*..".toCharArray(),
+                ".467.".toCharArray(),
+                ".....".toCharArray(),
+        };
+        var numLoc = findNumLoc(grid, 1, 1);
+        var found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+
+        grid = new char[][] {
+                ".....".toCharArray(),
+                ".467.".toCharArray(),
+                ".....".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, false);
+    }
+
+    private void testIsSymbol() {
+        assertEquals(isSymbol('*'), true);
+        assertEquals(isSymbol('#'), true);
+        assertEquals(isSymbol('$'), true);
+        assertEquals(isSymbol('.'), false);
+        assertEquals(isSymbol('9'), false);
+    }
+
+    private void testMain() throws Exception {
+        Integer sum = (Integer)runMain("aoc2023/Day3-input1.txt", 10, 10);
+        assertEquals(sum, 4361);
+
+        sum = (Integer)runMain("aoc2023/Day3-input1b.txt", 11, 10);
+        assertEquals(sum, 4361);
+
+        sum = (Integer)runMain("aoc2023/Day3-input2.txt", 140, 140);
+        assertEquals(sum, 540025);
+    }
+
+    public Object runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
         var startTime = Instant.now();
         var partNums = new ArrayList<Integer>();
-
-//        char[][] grid = new char[10][10]; // input1
-//        var inputFilename = "aoc2023/Day3-input1.txt";
-
-//        char[][] grid = new char[11][10]; // input1
-//        var inputFilename = "aoc2023/Day3-input1b.txt";
-
-        char[][] grid = new char[140][140]; // input2
-        var inputFilename = "aoc2023/Day3-input2.txt";
+        char[][] grid = new char[gridRowSize][gridColSize];
 
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
@@ -59,9 +122,11 @@ public class Day3 {
         var sum = partNums.stream().reduce(0, Integer::sum);
         System.out.println("Sum: " + sum);
         System.out.println("Time: " + (Duration.between(startTime, Instant.now())));
+
+        return sum;
     }
 
-    private static boolean hasSymbolAround(char[][] grid, NumLoc n) {
+    private boolean hasSymbolAround(char[][] grid, NumLoc n) {
         // Check left of partNum
         if (n.j > 0) {
             if (isSymbol(grid[n.i][n.j - 1])) {
@@ -100,11 +165,11 @@ public class Day3 {
         return false;
     }
 
-    private static boolean isSymbol(char c) {
+    private boolean isSymbol(char c) {
         return c != '.' && !Character.isDigit(c);
     }
 
-    public static NumLoc findNumLoc(char[][] grid, int i, int j) {
+    public NumLoc findNumLoc(char[][] grid, int i, int j) {
         var numLoc = new NumLoc();
         numLoc.i = i;
         numLoc.j = j;
@@ -128,6 +193,7 @@ public class Day3 {
 
         return numLoc;
     }
+
     public static class NumLoc {
         public int partNum;
         public int i, j; // first digit location

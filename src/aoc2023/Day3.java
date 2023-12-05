@@ -38,16 +38,16 @@ public class Day3 {
                 }
             }
 
-            // Find part nums
+            // Find part nums next to a symbol
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid[i].length; j++) {
                     char val = grid[i][j];
                     if (Character.isDigit(val)) {
                         var numLoc = findNumLoc(grid, i, j);
-                        System.out.print("\nFound PartNum: " + numLoc.partNum);
+                        //System.out.println("\nFound PartNum: " + numLoc.partNum);
                         if (hasSymbolAround(grid, numLoc)) {
                             partNums.add(numLoc.partNum);
-                            System.out.print("  + SYMBOL");
+                            System.out.println("Found PartNum: " + numLoc.partNum + "  with symbol");
                         }
                         j = numLoc.endj;
                     }

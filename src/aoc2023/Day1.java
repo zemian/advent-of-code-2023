@@ -17,7 +17,8 @@ public class Day1 {
             program.runMain("aoc2023/Day1-input2.txt");
         }
     }
-    public Object runMain(String inputFilename) throws Exception {
+
+    private Object runMain(String inputFilename) throws Exception {
         System.out.println("Processing input: " + inputFilename);
         var numbers = new ArrayList<Integer>();
         var firstDigitPattern = Pattern.compile("(\\d)");
@@ -49,12 +50,12 @@ public class Day1 {
         }
     }
 
-    public void runTests() throws Exception {
+    private void runTests() throws Exception {
         testRegexOnDigits();
         testMain();
     }
 
-    public void testMain() throws Exception {
+    private void testMain() throws Exception {
         Integer sum = (Integer)runMain("aoc2023/Day1-input1.txt");
         assertEquals(sum, 142);
 
@@ -62,7 +63,7 @@ public class Day1 {
         assertEquals(sum, 54632);
     }
 
-    public void testRegexOnDigits() {
+    private void testRegexOnDigits() {
         // Test regex to get first digit.
         var s = "sdpgz3five4seven6fiveh";
         var p = Pattern.compile("(\\d)");

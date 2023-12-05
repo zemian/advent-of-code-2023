@@ -18,7 +18,8 @@ public class Day2b {
             program.runMain("aoc2023/Day2-input2.txt");
         }
     }
-    public Object runMain(String inputFilename) throws Exception {
+
+    private Object runMain(String inputFilename) throws Exception {
         System.out.println("Processing input: " + inputFilename);
         var powerNums = new ArrayList<Integer>();
         var cl = Thread.currentThread().getContextClassLoader();
@@ -66,7 +67,7 @@ public class Day2b {
         return sum;
     }
 
-    public void runTests() throws Exception {
+    private void runTests() throws Exception {
         testMain();
     }
 

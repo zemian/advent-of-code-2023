@@ -37,7 +37,7 @@ public class Day3b {
         assertEquals(sum, 84584891);
     }
 
-    public Object runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
+    private Object runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
         var startTime = Instant.now();
         var powerNums = new ArrayList<Integer>();
         char[][] grid = new char[gridRowSize][gridColSize];
@@ -153,7 +153,7 @@ public class Day3b {
         return c != '.' && !Character.isDigit(c);
     }
 
-    public static NumLoc findNumLoc(char[][] grid, int i, int j) {
+    private static NumLoc findNumLoc(char[][] grid, int i, int j) {
         var numLoc = new NumLoc();
         numLoc.i = i;
         numLoc.j = j;
@@ -177,7 +177,7 @@ public class Day3b {
 
         return numLoc;
     }
-    public static class NumLoc {
+    private static class NumLoc {
         public int partNum;
         public int i, j; // first digit location
         public int endj; // last digit position (on j).

@@ -20,7 +20,7 @@ public class Day1b {
         }
     }
 
-    public void runTests() throws Exception {
+    private void runTests() throws Exception {
         testRegexOnDigitOrWord();
         testConvertNumWordToVal();
         testMain();
@@ -34,7 +34,7 @@ public class Day1b {
         }
     }
 
-    public void testMain() throws Exception {
+    private void testMain() throws Exception {
         Integer sum = (Integer)runMain("aoc2023/Day1-input1b.txt");
         assertEquals(sum, 281);
 
@@ -70,7 +70,7 @@ public class Day1b {
         assertEquals(m.group(1), "6");
     }
 
-    public Object runMain(String inputFilename) throws Exception {
+    private Object runMain(String inputFilename) throws Exception {
         System.out.println("Processing input: " + inputFilename);
         var numbers = new ArrayList<Integer>();
         var firstDigitPattern = Pattern.compile("(\\d|one|two|three|four|five|six|seven|eight|nine)");
@@ -110,7 +110,7 @@ public class Day1b {
         numToValMap.putAll(Map.of("four", "4", "five", "5", "six", "6"));
         numToValMap.putAll(Map.of("seven", "7", "eight", "8", "nine", "9"));
     }
-    public String convertNum(String num) {
+    private String convertNum(String num) {
         return (num.length() == 1) ? num : numToValMap.get(num);
     }
 }

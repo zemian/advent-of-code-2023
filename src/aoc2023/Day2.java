@@ -16,7 +16,8 @@ public class Day2 {
             program.runMain("aoc2023/Day2-input2.txt");
         }
     }
-    public Object runMain(String inputFilename) throws Exception {
+
+    private Object runMain(String inputFilename) throws Exception {
         System.out.println("Processing input: " + inputFilename);
         var availableCubes = Map.of("red", 12, "green", 13, "blue", 14);
         var possibleGameIds = new ArrayList<Integer>();
@@ -64,7 +65,7 @@ public class Day2 {
         return sum;
     }
 
-    public void runTests() throws Exception {
+    private void runTests() throws Exception {
         testParseGameInput();
         testMain();
     }
@@ -77,7 +78,7 @@ public class Day2 {
         assertEquals(sum, 3035);
     }
 
-    public void testParseGameInput() throws Exception {
+    private void testParseGameInput() throws Exception {
         // Test regex to get first and last digit.
         var s = "Game 1: 1 green, 1 blue, 1 red; 1 green, 8 red, 7 blue; 6 blue, 10 red; 4 red, 9 blue, 2 green; 1 green, 3 blue; 4 red, 1 green, 10 blue";
         var gameParts = s.split(": ");

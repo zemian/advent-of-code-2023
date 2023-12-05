@@ -16,7 +16,7 @@ public class Day1b {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain();
+            program.runMain("aoc2023/Day1-input2.txt");
         }
     }
 
@@ -35,7 +35,10 @@ public class Day1b {
     }
 
     public void testMain() throws Exception {
-        Integer sum = (Integer)runMain();
+        Integer sum = (Integer)runMain("aoc2023/Day1-input1b.txt");
+        assertEquals(sum, 281);
+
+        sum = (Integer)runMain("aoc2023/Day1-input2.txt");
         assertEquals(sum, 54019);
     }
 
@@ -67,12 +70,11 @@ public class Day1b {
         assertEquals(m.group(1), "6");
     }
 
-    public Object runMain() throws Exception {
+    public Object runMain(String inputFilename) throws Exception {
         var numbers = new ArrayList<Integer>();
         var firstDigitPattern = Pattern.compile("(\\d|one|two|three|four|five|six|seven|eight|nine)");
         var lastDigitPattern = Pattern.compile(".*(\\d|one|two|three|four|five|six|seven|eight|nine)");
 
-        var inputFilename = "aoc2023/Day1-input2.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {

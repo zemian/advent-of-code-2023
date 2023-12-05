@@ -14,15 +14,13 @@ public class Day1 {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain();
+            program.runMain("aoc2023/Day1-input2.txt");
         }
     }
-    public Object runMain() throws Exception {
+    public Object runMain(String inputFilename) throws Exception {
         var numbers = new ArrayList<Integer>();
         var firstDigitPattern = Pattern.compile("(\\d)");
         var lastDigitPattern = Pattern.compile(".*(\\d)");
-
-        var inputFilename = "aoc2023/Day1-input2.txt";
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {
@@ -56,7 +54,10 @@ public class Day1 {
     }
 
     public void testMain() throws Exception {
-        Integer sum = (Integer)runMain();
+        Integer sum = (Integer)runMain("aoc2023/Day1-input1.txt");
+        assertEquals(sum, 142);
+
+        sum = (Integer)runMain("aoc2023/Day1-input2.txt");
         assertEquals(sum, 54632);
     }
 

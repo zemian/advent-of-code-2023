@@ -20,6 +20,50 @@ public class Day1b {
         }
     }
 
+    private Integer runMain(String inputFilename) throws Exception {
+        System.out.println("Processing input: " + inputFilename);
+        var numbers = new ArrayList<Integer>();
+        var firstDigitPattern = Pattern.compile("(\\d|one|two|three|four|five|six|seven|eight|nine)");
+        var lastDigitPattern = Pattern.compile(".*(\\d|one|two|three|four|five|six|seven|eight|nine)");
+
+        var cl = Thread.currentThread().getContextClassLoader();
+        var ins = cl.getResourceAsStream(inputFilename);
+        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.isBlank()) {
+                    String lineNum = "";
+                    var matcher = firstDigitPattern.matcher(line);
+                    if (matcher.find()) {
+                        lineNum += convertNum(matcher.group(1));
+                    }
+                    var matcher2 = lastDigitPattern.matcher(line);
+                    if (matcher2.find()) {
+                        lineNum += convertNum(matcher2.group(1));
+                    }
+                    Integer num = Integer.parseInt(lineNum);
+                    numbers.add(num);
+                    System.out.println(num + " < " + line);
+                }
+            }
+            //System.out.println(numbers);
+            int sum = numbers.stream().reduce(0, Integer::sum);
+            System.out.println("Sum: " + sum);
+
+            return sum;
+        }
+    }
+
+    static Map<String, String> numToValMap = new HashMap<>();
+    static {
+        numToValMap.putAll(Map.of("one", "1", "two", "2", "three", "3"));
+        numToValMap.putAll(Map.of("four", "4", "five", "5", "six", "6"));
+        numToValMap.putAll(Map.of("seven", "7", "eight", "8", "nine", "9"));
+    }
+    private String convertNum(String num) {
+        return (num.length() == 1) ? num : numToValMap.get(num);
+    }
+
     private void runTests() throws Exception {
         testRegexOnDigitOrWord();
         testConvertNumWordToVal();
@@ -68,49 +112,5 @@ public class Day1b {
         m = p.matcher(s);
         m.find();
         assertEquals(m.group(1), "6");
-    }
-
-    private Integer runMain(String inputFilename) throws Exception {
-        System.out.println("Processing input: " + inputFilename);
-        var numbers = new ArrayList<Integer>();
-        var firstDigitPattern = Pattern.compile("(\\d|one|two|three|four|five|six|seven|eight|nine)");
-        var lastDigitPattern = Pattern.compile(".*(\\d|one|two|three|four|five|six|seven|eight|nine)");
-
-        var cl = Thread.currentThread().getContextClassLoader();
-        var ins = cl.getResourceAsStream(inputFilename);
-        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.isBlank()) {
-                    String lineNum = "";
-                    var matcher = firstDigitPattern.matcher(line);
-                    if (matcher.find()) {
-                        lineNum += convertNum(matcher.group(1));
-                    }
-                    var matcher2 = lastDigitPattern.matcher(line);
-                    if (matcher2.find()) {
-                        lineNum += convertNum(matcher2.group(1));
-                    }
-                    Integer num = Integer.parseInt(lineNum);
-                    numbers.add(num);
-                    System.out.println(num + " < " + line);
-                }
-            }
-            //System.out.println(numbers);
-            int sum = numbers.stream().reduce(0, Integer::sum);
-            System.out.println("Sum: " + sum);
-
-            return sum;
-        }
-    }
-
-    static Map<String, String> numToValMap = new HashMap<>();
-    static {
-        numToValMap.putAll(Map.of("one", "1", "two", "2", "three", "3"));
-        numToValMap.putAll(Map.of("four", "4", "five", "5", "six", "6"));
-        numToValMap.putAll(Map.of("seven", "7", "eight", "8", "nine", "9"));
-    }
-    private String convertNum(String num) {
-        return (num.length() == 1) ? num : numToValMap.get(num);
     }
 }

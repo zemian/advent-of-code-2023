@@ -19,6 +19,133 @@ public class Day3 {
         }
     }
 
+    private Integer runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
+        System.out.println("Processing input: " + inputFilename + "with grid size " + gridRowSize + ", " + gridColSize);
+        var startTime = Instant.now();
+        var partNums = new ArrayList<Integer>();
+        char[][] grid = new char[gridRowSize][gridColSize];
+
+        var cl = Thread.currentThread().getContextClassLoader();
+        var ins = cl.getResourceAsStream(inputFilename);
+        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
+            String line;
+
+            //Populate grid
+            int lineCount = 0;
+            while ((line = reader.readLine()) != null) {
+                if (!line.isBlank()) {
+                    for (int i = 0; i < line.length(); i++) {
+                        grid[lineCount][i] = line.charAt(i);
+                    }
+                    lineCount++;
+                    //System.out.println(line + " " + new String(grid[lineCount - 1]));
+                }
+            }
+
+            // Find part nums next to a symbol
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[i].length; j++) {
+                    char val = grid[i][j];
+                    if (Character.isDigit(val)) {
+                        var numLoc = findNumLoc(grid, i, j);
+                        //System.out.println("\nFound PartNum: " + numLoc.partNum);
+                        if (hasSymbolAround(grid, numLoc)) {
+                            partNums.add(numLoc.partNum);
+                            System.out.println("Found PartNum: " + numLoc.partNum + " with symbol");
+                        }
+                        j = numLoc.endj;
+                    }
+                }
+            }
+        }
+
+        var sum = partNums.stream().reduce(0, Integer::sum);
+        System.out.println("Sum: " + sum);
+        System.out.println("Time: " + (Duration.between(startTime, Instant.now())));
+
+        return sum;
+    }
+
+    private boolean hasSymbolAround(char[][] grid, NumLoc n) {
+        // Check left of partNum
+        if (n.j > 0) {
+            if (isSymbol(grid[n.i][n.j - 1])) {
+                return true;
+            }
+        }
+
+        // Check right of partNum
+        if (n.endj < grid[0].length - 1) {
+            if (isSymbol(grid[n.i][n.endj + 1])) {
+                return true;
+            }
+        }
+
+        // Check row above partNum (including diagonal position)
+        if (n.i > 0) {
+            var rowIndex = (n.i > 0) ? n.i - 1 : n.i;
+            var colIndex = (n.j > 0) ? n.j - 1 : n.j + 1;
+            var colEndIndex = (n.endj < grid[0].length - 1) ? n.endj + 1 : n.endj;
+            for (int i = colIndex; i <= colEndIndex; i++) {
+                if (isSymbol(grid[rowIndex][i])) {
+                    return true;
+                }
+            }
+        }
+
+        // Check row below partNum (including diagonal position)
+        if (n.j < grid[0].length - 1) {
+            var rowIndex = (n.i < grid[0].length - 1) ? n.i + 1 : n.i;
+            var colIndex = (n.j > 0) ? n.j - 1 : n.j + 1;
+            var colEndIndex = (n.endj < grid[0].length - 1) ? n.endj + 1 : n.endj;
+            for (int i = colIndex; i <= colEndIndex; i++) {
+                if (isSymbol(grid[rowIndex][i])) {
+                    return true;
+                }
+            }
+        }
+
+        // No symbol found
+        return false;
+    }
+
+    private boolean isSymbol(char c) {
+        return c != '.' && !Character.isDigit(c);
+    }
+
+    private NumLoc findNumLoc(char[][] grid, int i, int j) {
+        var numLoc = new NumLoc();
+        numLoc.i = i;
+        numLoc.j = j;
+        String partNum = "";
+        int k;
+        for (k = j; k < grid[i].length; k++) {
+            var nextChar = grid[i][k];
+            if (Character.isDigit(nextChar)) {
+                partNum += nextChar;
+            } else {
+                numLoc.partNum = Integer.parseInt(partNum);
+                numLoc.endj = k - 1;
+                break;
+            }
+        }
+        // Ensure partNum on end of line is captured properly
+        if (k == grid[i].length) {
+            numLoc.partNum = Integer.parseInt(partNum);
+            numLoc.endj = k - 1;
+        }
+
+        return numLoc;
+    }
+
+    private static class NumLoc {
+        public int partNum;
+        public int i, j; // first digit location
+        public int endj; // last digit position (on j).
+    }
+
+
+
     private void runTests() throws Exception {
         testFindNumLoc();
         testIsSymbol();
@@ -178,130 +305,5 @@ public class Day3 {
 
         sum = runMain("aoc2023/Day3-input2.txt", 140, 140);
         assertEquals(sum, 540025);
-    }
-
-    private Integer runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
-        System.out.println("Processing input: " + inputFilename + "with grid size " + gridRowSize + ", " + gridColSize);
-        var startTime = Instant.now();
-        var partNums = new ArrayList<Integer>();
-        char[][] grid = new char[gridRowSize][gridColSize];
-
-        var cl = Thread.currentThread().getContextClassLoader();
-        var ins = cl.getResourceAsStream(inputFilename);
-        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
-            String line;
-
-            //Populate grid
-            int lineCount = 0;
-            while ((line = reader.readLine()) != null) {
-                if (!line.isBlank()) {
-                    for (int i = 0; i < line.length(); i++) {
-                        grid[lineCount][i] = line.charAt(i);
-                    }
-                    lineCount++;
-                    //System.out.println(line + " " + new String(grid[lineCount - 1]));
-                }
-            }
-
-            // Find part nums next to a symbol
-            for (int i = 0; i < grid.length; i++) {
-                for (int j = 0; j < grid[i].length; j++) {
-                    char val = grid[i][j];
-                    if (Character.isDigit(val)) {
-                        var numLoc = findNumLoc(grid, i, j);
-                        //System.out.println("\nFound PartNum: " + numLoc.partNum);
-                        if (hasSymbolAround(grid, numLoc)) {
-                            partNums.add(numLoc.partNum);
-                            System.out.println("Found PartNum: " + numLoc.partNum + " with symbol");
-                        }
-                        j = numLoc.endj;
-                    }
-                }
-            }
-        }
-
-        var sum = partNums.stream().reduce(0, Integer::sum);
-        System.out.println("Sum: " + sum);
-        System.out.println("Time: " + (Duration.between(startTime, Instant.now())));
-
-        return sum;
-    }
-
-    private boolean hasSymbolAround(char[][] grid, NumLoc n) {
-        // Check left of partNum
-        if (n.j > 0) {
-            if (isSymbol(grid[n.i][n.j - 1])) {
-                return true;
-            }
-        }
-
-        // Check right of partNum
-        if (n.endj < grid[0].length - 1) {
-            if (isSymbol(grid[n.i][n.endj + 1])) {
-                return true;
-            }
-        }
-
-        // Check row above partNum (including diagonal position)
-        if (n.i > 0) {
-            var rowIndex = (n.i > 0) ? n.i - 1 : n.i;
-            var colIndex = (n.j > 0) ? n.j - 1 : n.j + 1;
-            var colEndIndex = (n.endj < grid[0].length - 1) ? n.endj + 1 : n.endj;
-            for (int i = colIndex; i <= colEndIndex; i++) {
-                if (isSymbol(grid[rowIndex][i])) {
-                    return true;
-                }
-            }
-        }
-
-        // Check row below partNum (including diagonal position)
-        if (n.j < grid[0].length - 1) {
-            var rowIndex = (n.i < grid[0].length - 1) ? n.i + 1 : n.i;
-            var colIndex = (n.j > 0) ? n.j - 1 : n.j + 1;
-            var colEndIndex = (n.endj < grid[0].length - 1) ? n.endj + 1 : n.endj;
-            for (int i = colIndex; i <= colEndIndex; i++) {
-                if (isSymbol(grid[rowIndex][i])) {
-                    return true;
-                }
-            }
-        }
-
-        // No symbol found
-        return false;
-    }
-
-    private boolean isSymbol(char c) {
-        return c != '.' && !Character.isDigit(c);
-    }
-
-    private NumLoc findNumLoc(char[][] grid, int i, int j) {
-        var numLoc = new NumLoc();
-        numLoc.i = i;
-        numLoc.j = j;
-        String partNum = "";
-        int k;
-        for (k = j; k < grid[i].length; k++) {
-            var nextChar = grid[i][k];
-            if (Character.isDigit(nextChar)) {
-                partNum += nextChar;
-            } else {
-                numLoc.partNum = Integer.parseInt(partNum);
-                numLoc.endj = k - 1;
-                break;
-            }
-        }
-        // Ensure partNum on end of line is captured properly
-        if (k == grid[i].length) {
-            numLoc.partNum = Integer.parseInt(partNum);
-            numLoc.endj = k - 1;
-        }
-
-        return numLoc;
-    }
-
-    private static class NumLoc {
-        public int partNum;
-        public int i, j; // first digit location
-        public int endj; // last digit position (on j).
     }
 }

@@ -14,7 +14,6 @@ import java.util.Optional;
 import static aoc2023.TestUtils.assertEquals;
 
 public class Day3b {
-
     public static void main(String[] args) throws Exception {
         var program = new Day3b();
         if (args.length > 0 && args[0].equals("test")) {
@@ -23,51 +22,6 @@ public class Day3b {
         } else {
             program.runMain("aoc2023/Day3-input2.txt", 140, 140);
         }
-    }
-
-    private void runTests() throws Exception {
-        testFindNumLocWithSymbol();
-        testMain();
-    }
-
-    private void testFindNumLocWithSymbol() {
-        char[][] grid = new char[][] {
-                ".....".toCharArray(),
-                ".467.".toCharArray(),
-                "..*..".toCharArray(),
-        };
-        var numLoc = findNumLoc(grid, 1, 1);
-        hasSymbolAround(grid, numLoc); // This must call to populate the symbol location
-        assertEquals(numLoc.partNum, 467);
-        assertEquals(numLoc.i, 1);
-        assertEquals(numLoc.j, 1);
-        assertEquals(numLoc.endj, 3);
-        assertEquals(numLoc.symbol, '*');
-        assertEquals(numLoc.si, 2);
-        assertEquals(numLoc.sj, 2);
-
-        grid = new char[][] {
-                ".....".toCharArray(),
-                "..467".toCharArray(),
-                "....$".toCharArray(),
-        };
-        numLoc = findNumLoc(grid, 1, 2);
-        hasSymbolAround(grid, numLoc); // This must call to populate the symbol location
-        assertEquals(numLoc.partNum, 467);
-        assertEquals(numLoc.i, 1);
-        assertEquals(numLoc.j, 2);
-        assertEquals(numLoc.endj, 4);
-        assertEquals(numLoc.symbol, '$');
-        assertEquals(numLoc.si, 2);
-        assertEquals(numLoc.sj, 4);
-    }
-
-    private void testMain() throws Exception {
-        Integer sum = runMain("aoc2023/Day3-input1.txt", 10, 10);
-        assertEquals(sum, 467835);
-
-        sum = runMain("aoc2023/Day3-input2.txt", 140, 140);
-        assertEquals(sum, 84584891);
     }
 
     private Integer runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
@@ -218,5 +172,50 @@ public class Day3b {
         public int endj; // last digit position (on j).
         public char symbol;
         public int si, sj; // symbol location
+    }
+
+    private void runTests() throws Exception {
+        testFindNumLocWithSymbol();
+        testMain();
+    }
+
+    private void testFindNumLocWithSymbol() {
+        char[][] grid = new char[][] {
+                ".....".toCharArray(),
+                ".467.".toCharArray(),
+                "..*..".toCharArray(),
+        };
+        var numLoc = findNumLoc(grid, 1, 1);
+        hasSymbolAround(grid, numLoc); // This must call to populate the symbol location
+        assertEquals(numLoc.partNum, 467);
+        assertEquals(numLoc.i, 1);
+        assertEquals(numLoc.j, 1);
+        assertEquals(numLoc.endj, 3);
+        assertEquals(numLoc.symbol, '*');
+        assertEquals(numLoc.si, 2);
+        assertEquals(numLoc.sj, 2);
+
+        grid = new char[][] {
+                ".....".toCharArray(),
+                "..467".toCharArray(),
+                "....$".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 2);
+        hasSymbolAround(grid, numLoc); // This must call to populate the symbol location
+        assertEquals(numLoc.partNum, 467);
+        assertEquals(numLoc.i, 1);
+        assertEquals(numLoc.j, 2);
+        assertEquals(numLoc.endj, 4);
+        assertEquals(numLoc.symbol, '$');
+        assertEquals(numLoc.si, 2);
+        assertEquals(numLoc.sj, 4);
+    }
+
+    private void testMain() throws Exception {
+        Integer sum = runMain("aoc2023/Day3-input1.txt", 10, 10);
+        assertEquals(sum, 467835);
+
+        sum = runMain("aoc2023/Day3-input2.txt", 140, 140);
+        assertEquals(sum, 84584891);
     }
 }

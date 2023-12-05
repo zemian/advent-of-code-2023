@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 
 import static aoc2023.TestUtils.assertEquals;
 
@@ -31,36 +30,36 @@ public class Day3 {
         // Find partNum in middle of grid
         char[][] grid = new char[][] {
                 ".....".toCharArray(),
-                ".467.".toCharArray(),
+                ".789.".toCharArray(),
                 ".....".toCharArray(),
         };
         var numLoc = findNumLoc(grid, 1, 1);
-        assertEquals(numLoc.partNum, 467);
+        assertEquals(numLoc.partNum, 789);
         assertEquals(numLoc.i, 1);
         assertEquals(numLoc.j, 1);
-        assertEquals(numLoc.endj, 4);
+        assertEquals(numLoc.endj, 3);
 
         // Find partNum on left side of the grid
         grid = new char[][] {
                 ".....".toCharArray(),
-                "467..".toCharArray(),
+                "689..".toCharArray(),
                 ".....".toCharArray(),
         };
         numLoc = findNumLoc(grid, 1, 0);
-        assertEquals(numLoc.partNum, 467);
+        assertEquals(numLoc.partNum, 689);
         assertEquals(numLoc.i, 1);
         assertEquals(numLoc.j, 0);
-        assertEquals(numLoc.endj, 3);
+        assertEquals(numLoc.endj, 2);
 
         // Find partNum on right side of the grid
         // This use case was not handled and cause the program to go into infinite loop!
         grid = new char[][] {
                 ".....".toCharArray(),
-                "..467".toCharArray(),
+                "..589".toCharArray(),
                 ".....".toCharArray(),
         };
         numLoc = findNumLoc(grid, 1, 2);
-        assertEquals(numLoc.partNum, 467);
+        assertEquals(numLoc.partNum, 589);
         assertEquals(numLoc.i, 1);
         assertEquals(numLoc.j, 2);
         assertEquals(numLoc.endj, 4);
@@ -69,7 +68,7 @@ public class Day3 {
     private void testHasSymbolAround() {
         char[][] grid = new char[][] {
                 "..*..".toCharArray(),
-                ".467.".toCharArray(),
+                ".100.".toCharArray(),
                 ".....".toCharArray(),
         };
         var numLoc = findNumLoc(grid, 1, 1);
@@ -78,7 +77,83 @@ public class Day3 {
 
         grid = new char[][] {
                 ".....".toCharArray(),
-                ".467.".toCharArray(),
+                ".101.".toCharArray(),
+                "..*..".toCharArray(),
+        };
+
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+        grid = new char[][] {
+                ".....".toCharArray(),
+                ".102.".toCharArray(),
+                "*....".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+        grid = new char[][] {
+                "....*".toCharArray(),
+                ".103.".toCharArray(),
+                ".....".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+        grid = new char[][] {
+                "*....".toCharArray(),
+                ".103.".toCharArray(),
+                ".....".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+        grid = new char[][] {
+                ".....".toCharArray(),
+                ".103.".toCharArray(),
+                "....*".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+        grid = new char[][] {
+                ".....".toCharArray(),
+                "*103.".toCharArray(),
+                ".....".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+        grid = new char[][] {
+                ".....".toCharArray(),
+                ".103*".toCharArray(),
+                ".....".toCharArray(),
+        };
+        numLoc = findNumLoc(grid, 1, 1);
+        found = hasSymbolAround(grid, numLoc);
+        assertEquals(found, true);
+
+        grid = new char[][] {
+                ".....".toCharArray(),
+                ".104.".toCharArray(),
                 ".....".toCharArray(),
         };
         numLoc = findNumLoc(grid, 1, 1);
@@ -154,36 +229,40 @@ public class Day3 {
 
     private boolean hasSymbolAround(char[][] grid, NumLoc n) {
         // Check left of partNum
-        if (n.j > 0) {
+        if (n.j >= 1) {
             if (isSymbol(grid[n.i][n.j - 1])) {
                 return true;
             }
         }
 
         // Check right of partNum
-        if (n.endj < grid[0].length) {
-            if (isSymbol(grid[n.i][n.endj])) {
+        if (n.endj < grid[0].length - 1) {
+            if (isSymbol(grid[n.i][n.endj + 1])) {
                 return true;
             }
         }
 
         // Check row above partNum (including diagonal position)
-        var rowIndex = (n.i > 0) ? n.i - 1 : n.i;
-        var colIndex = (n.j > 0) ? n.j - 1 : n.j;
-        var colEndIndex = (n.endj > grid[0].length) ? n.endj + 1 : n.endj;
-        for (int i = colIndex; i <= colEndIndex; i++) {
-            if (isSymbol(grid[rowIndex][i])) {
-                return true;
+        if (n.i > 0) {
+            var rowIndex = (n.i > 0) ? n.i - 1 : n.i;
+            var colIndex = (n.j > 0) ? n.j - 1 : n.j + 1;
+            var colEndIndex = (n.endj < grid[0].length - 1) ? n.endj + 1 : n.endj;
+            for (int i = colIndex; i <= colEndIndex; i++) {
+                if (isSymbol(grid[rowIndex][i])) {
+                    return true;
+                }
             }
         }
 
         // Check row below partNum (including diagonal position)
-        rowIndex = (n.i < grid[0].length - 1) ? n.i + 1 : n.i;
-        colIndex = (n.j > 0) ? n.j - 1 : n.j;
-        colEndIndex = (n.endj > grid[0].length) ? n.endj + 1 : n.endj;
-        for (int i = colIndex; i <= colEndIndex; i++) {
-            if (isSymbol(grid[rowIndex][i])) {
-                return true;
+        if (n.j < grid[0].length - 1) {
+            var rowIndex = (n.i < grid[0].length - 1) ? n.i + 1 : n.i;
+            var colIndex = (n.j > 0) ? n.j - 1 : n.j + 1;
+            var colEndIndex = (n.endj < grid[0].length - 1) ? n.endj + 1 : n.endj;
+            for (int i = colIndex; i <= colEndIndex; i++) {
+                if (isSymbol(grid[rowIndex][i])) {
+                    return true;
+                }
             }
         }
 
@@ -207,7 +286,7 @@ public class Day3 {
                 partNum += nextChar;
             } else {
                 numLoc.partNum = Integer.parseInt(partNum);
-                numLoc.endj = k;
+                numLoc.endj = k - 1;
                 break;
             }
         }

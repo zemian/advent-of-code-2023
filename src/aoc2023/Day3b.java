@@ -41,12 +41,11 @@ public class Day3b {
         assertEquals(numLoc.partNum, 467);
         assertEquals(numLoc.i, 1);
         assertEquals(numLoc.j, 1);
-        assertEquals(numLoc.endj, 4);
+        assertEquals(numLoc.endj, 3);
         assertEquals(numLoc.symbol, '*');
         assertEquals(numLoc.si, 2);
         assertEquals(numLoc.sj, 2);
 
-        // This use case was not handled and cause the program to go into infinite loop!
         grid = new char[][] {
                 ".....".toCharArray(),
                 "..467".toCharArray(),
@@ -94,7 +93,7 @@ public class Day3b {
                 }
             }
 
-            // Find pair of part nums next to a symbol that's connected
+            // Find a pair of part nums next to a symbol that's connected
             // We will calculate the power of these two and the sum of all later.
             var symbolNumLocMap = new HashMap<String, NumLoc>();
             for (int i = 0; i < grid.length; i++) {
@@ -104,13 +103,15 @@ public class Day3b {
                         var numLoc = findNumLoc(grid, i, j);
                         //System.out.println("\nFound PartNum: " + numLoc.partNum);
                         if (hasSymbolAround(grid, numLoc)) {
-                            System.out.println("Found PartNum: " + numLoc.partNum + " with symbol: " + numLoc.symbol);
                             var key = numLoc.si + "," + numLoc.sj;
+                            System.out.println("Found PartNum: " + numLoc.partNum +
+                                    " with symbol: " + numLoc.symbol + " at " + key);
                             if (symbolNumLocMap.containsKey(key)) {
                                 var n1 = symbolNumLocMap.get(key);
                                 var power = n1.partNum * numLoc.partNum;
+//                                System.out.println("  Found power nums: " + n1.partNum + " * " + numLoc.partNum);
                                 powerNums.add(power);
-                                symbolNumLocMap.remove(key); // Do I need this?
+                                symbolNumLocMap.remove(key);
                             } else {
                                 symbolNumLocMap.put(key, numLoc);
                             }
@@ -130,10 +131,8 @@ public class Day3b {
 
     // Part Two requires us to find and store the symbol grid location
     private static boolean hasSymbolAround(char[][] grid, NumLoc n) {
-        n.s = true; // start with found flag.
-
         // Check left of partNum
-        if (n.j > 0) {
+        if (n.j >= 1) {
             if (isSymbol(grid[n.i][n.j - 1])) {
                 n.symbol = grid[n.i][n.j - 1];
                 n.si = n.i;
@@ -143,43 +142,44 @@ public class Day3b {
         }
 
         // Check right of partNum
-        if (n.endj < grid[0].length) {
-            if (isSymbol(grid[n.i][n.endj])) {
-                n.symbol = grid[n.i][n.endj];
+        if (n.endj < grid[0].length - 1) {
+            if (isSymbol(grid[n.i][n.endj + 1])) {
+                n.symbol = grid[n.i][n.endj + 1];
                 n.si = n.i;
-                n.sj = n.endj;
+                n.sj = n.endj + 1;
                 return true;
             }
         }
 
         // Check row above partNum (including diagonal position)
-        var rowIndex = (n.i > 0) ? n.i - 1 : n.i;
-        var colIndex = (n.j > 0) ? n.j - 1 : n.j;
-        var colEndIndex = (n.endj > grid[0].length) ? n.endj + 1 : n.endj;
-        for (int i = colIndex; i <= colEndIndex; i++) {
-            if (isSymbol(grid[rowIndex][i])) {
-                n.symbol = grid[rowIndex][i];
-                n.si = rowIndex;
-                n.sj = i;
-                return true;
+        if (n.i > 0) {
+            var rowIndex = (n.i > 0) ? n.i - 1 : n.i;
+            var colIndex = (n.j > 0) ? n.j - 1 : n.j + 1;
+            var colEndIndex = (n.endj < grid[0].length - 1) ? n.endj + 1 : n.endj;
+            for (int i = colIndex; i <= colEndIndex; i++) {
+                if (isSymbol(grid[rowIndex][i])) {
+                    n.symbol = grid[rowIndex][i];
+                    n.si = rowIndex;
+                    n.sj = i;
+                    return true;
+                }
             }
         }
 
         // Check row below partNum (including diagonal position)
-        rowIndex = (n.i < grid[0].length - 1) ? n.i + 1 : n.i;
-        colIndex = (n.j > 0) ? n.j - 1 : n.j;
-        colEndIndex = (n.endj > grid[0].length) ? n.endj + 1 : n.endj;
-        for (int i = colIndex; i <= colEndIndex; i++) {
-            if (isSymbol(grid[rowIndex][i])) {
-                n.symbol = grid[rowIndex][i];
-                n.si = rowIndex;
-                n.sj = i;
-                return true;
+        if (n.j < grid[0].length - 1) {
+            var rowIndex = (n.i < grid[0].length - 1) ? n.i + 1 : n.i;
+            var colIndex = (n.j > 0) ? n.j - 1 : n.j + 1;
+            var colEndIndex = (n.endj < grid[0].length - 1) ? n.endj + 1 : n.endj;
+            for (int i = colIndex; i <= colEndIndex; i++) {
+                if (isSymbol(grid[rowIndex][i])) {
+                    n.symbol = grid[rowIndex][i];
+                    n.si = rowIndex;
+                    n.sj = i;
+                    return true;
+                }
             }
         }
-
-        // No symbol found
-        n.s = false;
 
         return false;
     }
@@ -200,7 +200,7 @@ public class Day3b {
                 partNum += nextChar;
             } else {
                 numLoc.partNum = Integer.parseInt(partNum);
-                numLoc.endj = k;
+                numLoc.endj = k - 1;
                 break;
             }
         }
@@ -218,6 +218,5 @@ public class Day3b {
         public int endj; // last digit position (on j).
         public char symbol;
         public int si, sj; // symbol location
-        public boolean s; // Symbol found or not
     }
 }

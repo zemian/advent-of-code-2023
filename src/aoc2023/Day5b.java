@@ -3,18 +3,19 @@ package aoc2023;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.LongStream;
 
 import static aoc2023.TestUtils.assertEquals;
 
-public class Day5 {
+public class Day5b {
     public static void main(String[] args) throws Exception {
-        var program = new Day5();
+        var program = new Day5b();
         if (args.length > 0 && args[0].equals("test")) {
             program.runTests();
             System.out.println("Tests passed.");
@@ -36,7 +37,8 @@ public class Day5 {
                 lightToTemperatureMap = null,
                 temperatureToHumidityMap = null,
                 humidityToLocationMap = null;
-        Map<Long, Long> seedToLocationMap = new HashMap<>();
+        long minLocation = Long.MAX_VALUE;
+        var startTime = Instant.now();
 
         System.out.println("Processing input: " + inputFilename);
         var cl = Thread.currentThread().getContextClassLoader();
@@ -70,20 +72,26 @@ public class Day5 {
             }
         }
 
-        for (var seed : seeds) {
-            var soil = seedToSoilMap.getMapping(seed);
-            var fer = soilToFertilizerMap.getMapping(soil);
-            var water = fertilizerToWaterMap.getMapping(fer);
-            var light = waterToLightMap.getMapping(water);
-            var temp = lightToTemperatureMap.getMapping(light);
-            var humid = temperatureToHumidityMap.getMapping(temp);
-            var loc = humidityToLocationMap.getMapping(humid);
-            seedToLocationMap.put(seed, loc);
+        for (int i = 0; i < seeds.size(); i+=2) {
+            var seedStart = seeds.get(i);
+            var seedLen = seeds.get(i + 1);
+            for (int j = 0; j < seedLen ; j++) {
+                var seed = seedStart + j;
+                var soil = seedToSoilMap.getMapping(seed);
+                var fer = soilToFertilizerMap.getMapping(soil);
+                var water = fertilizerToWaterMap.getMapping(fer);
+                var light = waterToLightMap.getMapping(water);
+                var temp = lightToTemperatureMap.getMapping(light);
+                var humid = temperatureToHumidityMap.getMapping(temp);
+                var loc = humidityToLocationMap.getMapping(humid);
+                minLocation = Long.min(minLocation, loc);
+                //System.out.println("Found location: " + loc + " for seed: " + seed);
+            }
         }
-
-        var minLocation = seedToLocationMap.values().stream().min(Long::compareTo);
         System.out.println("Min location: " + minLocation);
-        return minLocation.get();
+        System.out.println("Time: " + (Duration.between(startTime, Instant.now())));
+
+        return minLocation;
     }
 
     private LazyMappingContainer parseMapping(BufferedReader reader) throws Exception {
@@ -171,9 +179,10 @@ public class Day5 {
 
     private void testMain() throws Exception {
         Long minLoc = runMain("aoc2023/Day5-input1.txt");
-        assertEquals(minLoc, 35L);
+        assertEquals(minLoc, 46L);
 
+        // Note: it will take 13 mins to process this large input!
         minLoc = runMain("aoc2023/Day5-input2.txt");
-        assertEquals(minLoc, 1181555926L);
+        assertEquals(minLoc, 37806486L);
     }
 }

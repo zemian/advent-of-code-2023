@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +27,9 @@ public class Day5b {
 
     private Long runMain(String inputFilename) throws Exception {
         // NOTE: Java Integer.MAX_VALUE can only handle 2_147_483_647, so we will use Long to handle larger num
-        // NOTE2: Due to large input size, we can't just stored entire mapping in variable or else it runs out
+        // NOTE2: Due to large input size, we can't just store entire mapping in variable or else it runs out
         //        of memory.
+        // NOTE3: Be patient! It will take 13 mins to process the large input2  file!
         List<Long> seeds = null;
         LazyMappingContainer
                 seedToSoilMap = null,
@@ -41,6 +43,7 @@ public class Day5b {
         var startTime = Instant.now();
 
         System.out.println("Processing input: " + inputFilename);
+        System.out.println("Started on: " + new Date());
         var cl = Thread.currentThread().getContextClassLoader();
         var ins = cl.getResourceAsStream(inputFilename);
         try (var reader = new BufferedReader(new InputStreamReader(ins))) {
@@ -181,7 +184,6 @@ public class Day5b {
         Long minLoc = runMain("aoc2023/Day5-input1.txt");
         assertEquals(minLoc, 46L);
 
-        // Note: it will take 13 mins to process this large input!
         minLoc = runMain("aoc2023/Day5-input2.txt");
         assertEquals(minLoc, 37806486L);
     }

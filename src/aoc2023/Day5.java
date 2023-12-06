@@ -25,7 +25,7 @@ public class Day5 {
 
     private Long runMain(String inputFilename) throws Exception {
         // NOTE: Java Integer.MAX_VALUE can only handle 2_147_483_647, so we will use Long to handle larger num
-        // NOTE2: Due to large input size, we can't just stored entire mapping in variable or else it runs out
+        // NOTE2: Due to large input size, we can't just store entire mapping in variable or else it runs out
         //        of memory.
         List<Long> seeds = null;
         LazyMappingContainer

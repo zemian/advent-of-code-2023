@@ -79,10 +79,11 @@ public class Day5 {
             var humid = temperatureToHumidityMap.getMapping(temp);
             var loc = humidityToLocationMap.getMapping(humid);
             seedToLocationMap.put(seed, loc);
+            System.out.println("Found location: " + loc + " for seed: " + seed);
         }
 
         var minLocation = seedToLocationMap.values().stream().min(Long::compareTo);
-        System.out.println("Min location: " + minLocation);
+        System.out.println("Min location: " + minLocation.get());
         return minLocation.get();
     }
 

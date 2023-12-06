@@ -30,6 +30,7 @@ public class Day5b {
         // NOTE2: Due to large input size, we can't just store entire mapping in variable or else it runs out
         //        of memory.
         // NOTE3: Be patient! It will take 13 mins to process the large input2  file!
+        //        TODO: How to optimize this?
         List<Long> seeds = null;
         LazyMappingContainer
                 seedToSoilMap = null,

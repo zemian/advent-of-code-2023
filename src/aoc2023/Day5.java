@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.LongStream;
 
 import static aoc2023.TestUtils.assertEquals;
 
@@ -27,15 +28,15 @@ public class Day5 {
         // NOTE2: Due to large input size, we can't just stored entire mapping in variable or else it runs out
         //        of memory.
         List<Long> seeds = null;
-        Map<Long, Long>
+        LazyMappingContainer
                 seedToSoilMap = null,
                 soilToFertilizerMap = null,
                 fertilizerToWaterMap = null,
                 waterToLightMap = null,
                 lightToTemperatureMap = null,
                 temperatureToHumidityMap = null,
-                humidityToLocationMap = null,
-                seedToLocationMap = new HashMap<>();
+                humidityToLocationMap = null;
+        Map<Long, Long> seedToLocationMap = new HashMap<>();
 
         System.out.println("Processing input: " + inputFilename);
         var cl = Thread.currentThread().getContextClassLoader();
@@ -70,13 +71,13 @@ public class Day5 {
         }
 
         for (var seed : seeds) {
-            var soil = seedToSoilMap.getOrDefault(seed, seed);
-            var fer = soilToFertilizerMap.getOrDefault(soil, soil);
-            var water = fertilizerToWaterMap.getOrDefault(fer, fer);
-            var light = waterToLightMap.getOrDefault(water, water);
-            var temp = lightToTemperatureMap.getOrDefault(light, light);
-            var humid = temperatureToHumidityMap.getOrDefault(temp, temp);
-            var loc = humidityToLocationMap.getOrDefault(humid, humid);
+            var soil = seedToSoilMap.getMapping(seed);
+            var fer = soilToFertilizerMap.getMapping(soil);
+            var water = fertilizerToWaterMap.getMapping(fer);
+            var light = waterToLightMap.getMapping(water);
+            var temp = lightToTemperatureMap.getMapping(light);
+            var humid = temperatureToHumidityMap.getMapping(temp);
+            var loc = humidityToLocationMap.getMapping(humid);
             seedToLocationMap.put(seed, loc);
         }
 
@@ -84,8 +85,8 @@ public class Day5 {
         return minLoc.get();
     }
 
-    private HashMap<Long, Long> parseMapping(BufferedReader reader) throws Exception {
-        var mapping = new HashMap<Long, Long>();
+    private LazyMappingContainer parseMapping(BufferedReader reader) throws Exception {
+        var lazyMappingContainer = new LazyMappingContainer();
         String line;
         while ((line = reader.readLine()) != null) {
             if (line.isBlank()) {
@@ -96,16 +97,48 @@ public class Day5 {
             var sourceStart = Long.parseLong(parts[1]);
             var len = Integer.parseInt(parts[2]);
 
-            for (int i = 0; i < len; i++) {
-                var destVal = destStart + i;
-                var sourceVal = sourceStart + i;
-                mapping.put(sourceVal, destVal);
-            }
+            lazyMappingContainer.addMapping(new LazyMapping(destStart, sourceStart, len));
         }
-        return mapping;
+        return lazyMappingContainer;
+    }
+
+    private class LazyMapping {
+        private long destStart, sourceStart, len;
+        public LazyMapping(long destStart, long sourceStart, long len) {
+            this.destStart = destStart;
+            this.sourceStart = sourceStart;
+            this.len = len;
+        }
+
+        public long getMapping(long sourceVal) {
+            if (!isInRange(sourceVal)) {
+                return sourceVal;
+            }
+
+            return destStart + (sourceVal - sourceStart);
+        }
+
+        public boolean isInRange(long sourceVal) {
+            return sourceVal >= sourceStart && sourceVal < (sourceStart + len);
+        }
+    }
+
+    private class LazyMappingContainer {
+        private List<LazyMapping> lazyMappings = new ArrayList<>();
+
+        public void addMapping(LazyMapping mapping) {
+            lazyMappings.add(mapping);
+        }
+
+        public long getMapping(long sourceVal) {
+            // Ensure we search all the mapping list that is within range
+            var mapping = lazyMappings.stream().filter(e -> e.isInRange(sourceVal)).findFirst();
+            return mapping.map(lazyMapping -> lazyMapping.getMapping(sourceVal)).orElse(sourceVal);
+        }
     }
 
     private void runTests() throws Exception {
+        testLazyMapping();
         testParsingMapping();
         testMain();
     }
@@ -115,12 +148,24 @@ public class Day5 {
                 50 98 2
                 52 50 48
                 """);
-        var mapping = parseMapping(new BufferedReader(reader));
-        assertEquals(mapping.get(98L), 50L);
-        assertEquals(mapping.get(99L), 51L);
-        assertEquals(mapping.get(50L), 52L);
-        assertEquals(mapping.get(51L), 53L);
-        assertEquals(mapping.get(53L), 55L);
+        var lazyMappingContainer = parseMapping(new BufferedReader(reader));
+        assertEquals(lazyMappingContainer.getMapping(98L), 50L);
+        assertEquals(lazyMappingContainer.getMapping(99L), 51L);
+        assertEquals(lazyMappingContainer.getMapping(50L), 52L);
+        assertEquals(lazyMappingContainer.getMapping(51L), 53L);
+        assertEquals(lazyMappingContainer.getMapping(53L), 55L);
+    }
+
+    private void testLazyMapping() {
+        var lazyMapping = new LazyMapping(50, 98, 2);
+        assertEquals(lazyMapping.getMapping(98L), 50L);
+        assertEquals(lazyMapping.getMapping(98L), 50L);
+        assertEquals(lazyMapping.getMapping(99L), 51L);
+
+        lazyMapping = new LazyMapping(52, 50, 48);
+        assertEquals(lazyMapping.getMapping(50L), 52L);
+        assertEquals(lazyMapping.getMapping(51L), 53L);
+        assertEquals(lazyMapping.getMapping(53L), 55L);
     }
 
     private void testMain() throws Exception {
@@ -128,6 +173,6 @@ public class Day5 {
         assertEquals(minLoc, 35L);
 
         minLoc = runMain("aoc2023/Day5-input2.txt");
-        assertEquals(minLoc, -1L);
+        assertEquals(minLoc, 1181555926L);
     }
 }

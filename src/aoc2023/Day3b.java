@@ -5,11 +5,7 @@ import java.io.InputStreamReader;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 
 import static aoc2023.TestUtils.assertEquals;
 
@@ -56,7 +52,7 @@ public class Day3b {
                     if (Character.isDigit(val)) {
                         var numLoc = findNumLoc(grid, i, j);
                         //System.out.println("\nFound PartNum: " + numLoc.partNum);
-                        if (hasSymbolAround(grid, numLoc)) {
+                        if (checkAndUpdateSymbol(grid, numLoc)) {
                             var key = numLoc.si + "," + numLoc.sj;
                             System.out.println("Found PartNum: " + numLoc.partNum +
                                     " with symbol: " + numLoc.symbol + " at " + key);
@@ -84,7 +80,7 @@ public class Day3b {
     }
 
     // Part Two requires us to find and store the symbol grid location
-    private static boolean hasSymbolAround(char[][] grid, NumLoc n) {
+    private static boolean checkAndUpdateSymbol(char[][] grid, NumLoc n) {
         // Check left of partNum
         if (n.j > 0) {
             if (isSymbol(grid[n.i][n.j - 1])) {
@@ -186,7 +182,7 @@ public class Day3b {
                 "..*..".toCharArray(),
         };
         var numLoc = findNumLoc(grid, 1, 1);
-        hasSymbolAround(grid, numLoc); // This must call to populate the symbol location
+        checkAndUpdateSymbol(grid, numLoc); // This must call to populate the symbol location
         assertEquals(numLoc.partNum, 467);
         assertEquals(numLoc.i, 1);
         assertEquals(numLoc.j, 1);
@@ -201,7 +197,7 @@ public class Day3b {
                 "....$".toCharArray(),
         };
         numLoc = findNumLoc(grid, 1, 2);
-        hasSymbolAround(grid, numLoc); // This must call to populate the symbol location
+        checkAndUpdateSymbol(grid, numLoc); // This must call to populate the symbol location
         assertEquals(numLoc.partNum, 467);
         assertEquals(numLoc.i, 1);
         assertEquals(numLoc.j, 2);

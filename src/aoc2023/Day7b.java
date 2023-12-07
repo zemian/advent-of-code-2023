@@ -138,6 +138,7 @@ public class Day7b {
                 }
             }
 
+            // After adjusting the card count frequency, we can continue as before
             var maxCount = freq.values().stream().max(Integer::compareTo).get();
             if (maxCount == 5) {
                 return FIVE_OF_A_KIND;

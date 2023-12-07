@@ -11,17 +11,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
 
 import static aoc2023.TestUtils.assertEquals;
 
-public class Day5b {
+public class Day5b2 {
     public static void main(String[] args) throws Exception {
-        var program = new Day5b();
+        var program = new Day5b2();
         if (args.length > 0 && args[0].equals("test")) {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("aoc2023/Day5-input2.txt");
+            program.runMain("aoc2023/Day5-input1.txt");
         }
     }
 
@@ -29,8 +34,14 @@ public class Day5b {
         // NOTE: Java Integer.MAX_VALUE can only handle 2_147_483_647, so we will use Long to handle larger num
         // NOTE2: Due to large input size, we can't just store entire mapping in variable or else it runs out
         //        of memory.
-        // NOTE3: Be patient! It will take 13 mins to process the large input2  file!
-        //        To see an faster implementation, see Day5b2.java
+        // NOTE3: We improved this program speed by using thread pool and split the work in each thread.
+        //        It has reduced from 13mins to 2.4mins.
+        //        NOTE: We can only use up to 60% of the number of CPU core. Anything more will actually slow it
+        //              down!
+
+        var numOfCores = Runtime.getRuntime().availableProcessors();
+        pool = Executors.newFixedThreadPool((int)(numOfCores * 0.6));
+
         List<Long> seeds = null;
         LazyMappingContainer
                 seedToSoilMap = null,
@@ -40,7 +51,6 @@ public class Day5b {
                 lightToTemperatureMap = null,
                 temperatureToHumidityMap = null,
                 humidityToLocationMap = null;
-        long minLocation = Long.MAX_VALUE;
         var startTime = Instant.now();
 
         System.out.println("Processing input: " + inputFilename);
@@ -76,27 +86,57 @@ public class Day5b {
             }
         }
 
+        LazyMappingContainer finalSeedToSoilMap = seedToSoilMap;
+        LazyMappingContainer finalSoilToFertilizerMap = soilToFertilizerMap;
+        LazyMappingContainer finalFertilizerToWaterMap = fertilizerToWaterMap;
+        LazyMappingContainer finalWaterToLightMap = waterToLightMap;
+        LazyMappingContainer finalLightToTemperatureMap = lightToTemperatureMap;
+        LazyMappingContainer finalTemperatureToHumidityMap = temperatureToHumidityMap;
+        LazyMappingContainer finalHumidityToLocationMap = humidityToLocationMap;
+        List<Long> finalSeeds = seeds;
+
+        var taskLists = new ArrayList<Future<Long>>();
         for (int i = 0; i < seeds.size(); i+=2) {
-            var seedStart = seeds.get(i);
-            var seedLen = seeds.get(i + 1);
-            for (int j = 0; j < seedLen ; j++) {
-                var seed = seedStart + j;
-                var soil = seedToSoilMap.getMapping(seed);
-                var fer = soilToFertilizerMap.getMapping(soil);
-                var water = fertilizerToWaterMap.getMapping(fer);
-                var light = waterToLightMap.getMapping(water);
-                var temp = lightToTemperatureMap.getMapping(light);
-                var humid = temperatureToHumidityMap.getMapping(temp);
-                var loc = humidityToLocationMap.getMapping(humid);
-                minLocation = Long.min(minLocation, loc);
-                //System.out.println("Found location: " + loc + " for seed: " + seed);
-            }
+            var finalIndex = i;
+            var task = pool.submit(() -> {
+                var t = Thread.currentThread();
+                System.out.println(new Date() + " " + t.getName() + " started work.");
+                var seedStart = finalSeeds.get(finalIndex);
+                var seedLen = finalSeeds.get(finalIndex + 1);
+                long minLoc = Long.MAX_VALUE;
+                for (int j = 0; j < seedLen ; j++) {
+                    var seed = seedStart + j;
+                    var soil = finalSeedToSoilMap.getMapping(seed);
+                    var fer = finalSoilToFertilizerMap.getMapping(soil);
+                    var water = finalFertilizerToWaterMap.getMapping(fer);
+                    var light = finalWaterToLightMap.getMapping(water);
+                    var temp = finalLightToTemperatureMap.getMapping(light);
+                    var humid = finalTemperatureToHumidityMap.getMapping(temp);
+                    var loc = finalHumidityToLocationMap.getMapping(humid);
+                    minLoc = Long.min(minLoc, loc);
+                    //System.out.println("Found location: " + loc + " for seed: " + seed);
+                }
+                System.out.println(new Date() + " " + t.getName() + " got minLoc: " + minLoc);
+                return minLoc;
+            });
+            taskLists.add(task);
         }
-        System.out.println("Min location: " + minLocation);
+        var minLocation = taskLists.stream().map(e -> {
+            try {
+                return e.get();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }).min(Long::compare);
+        System.out.println("Min location: " + minLocation.get());
         System.out.println("Time: " + (Duration.between(startTime, Instant.now())));
 
-        return minLocation;
+        pool.shutdown();
+
+        return minLocation.get();
     }
+
+    private ExecutorService pool;
 
     private LazyMappingContainer parseMapping(BufferedReader reader) throws Exception {
         var lazyMappingContainer = new LazyMappingContainer();

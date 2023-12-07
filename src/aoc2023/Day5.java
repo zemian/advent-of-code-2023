@@ -19,7 +19,7 @@ public class Day5 {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("aoc2023/Day5-input1.txt");
+            program.runMain("aoc2023/Day5-input2.txt");
         }
     }
 

@@ -148,14 +148,14 @@ public class Day7 {
         }
 
         private int compare(Hand a, Hand b) {
-            int typeRet = a.getType().compareTo(b.getType());
+            int typeRet = a.getType().compareTo(b.getType()); // Ascending order (HighCard or Lowest Hand first)
             if (typeRet == 0) {
                 var cardsA = a.getCardsAry();
                 var cardsB = b.getCardsAry();
                 for (int i = 0; i < cardsA.length; i++) {
                     var ca = cardsA[i];
                     var cb = cardsB[i];
-                    var cardRet = Integer.compare(CARD_ORDER.get(cb), CARD_ORDER.get(ca));
+                    var cardRet = Integer.compare(CARD_ORDER.get(cb), CARD_ORDER.get(ca)); // Descending order (A first)
                     if (cardRet != 0) {
                         return cardRet;
                     }

@@ -51,8 +51,8 @@ public class Day9 {
                 }
                 for (int i = diffList.size() - 2; i >= 0 ; i--) {
                     var prevDiffs = diffList.get(i + 1);
-                    var nextDiffs = diffList.get(i);
-                    nextDiffs.add(nextDiffs.getLast() + prevDiffs.getLast());
+                    var curDiffs = diffList.get(i);
+                    curDiffs.add(curDiffs.getLast() + prevDiffs.getLast());
                 }
                 lastNums.add(diffList.getFirst().getLast());
             }

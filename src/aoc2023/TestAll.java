@@ -19,5 +19,7 @@ public class TestAll {
         Day7b.main(testArgs);
         Day8.main(testArgs);
 //        Day8b.main(testArgs);
+        Day9.main(testArgs);
+        Day9b.main(testArgs);
     }
 }

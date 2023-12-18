@@ -13,7 +13,7 @@ public class Day15 {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("aoc2023/Day15-input2.txt");
+            program.runMain("aoc2023/Day15-input1.txt");
         }
     }
 

@@ -32,7 +32,7 @@ public class Day11 {
                     .collect(Collectors.toList());
             char[][] grid = expand(gridList);
             //printGrid(grid);
-            var distList = findGalaxiesDist(grid);
+            var distList = findAllGalaxyDistPairs(grid);
             int sum = distList.stream().reduce(0, Integer::sum);
             System.out.println("Sum: " + sum + ", pairs count: " + distList.size());
             return sum;
@@ -48,7 +48,7 @@ public class Day11 {
         }
     }
 
-    private List<Integer> findGalaxiesDist(char[][] grid) {
+    private List<Integer> findAllGalaxyDistPairs(char[][] grid) {
         var distList = new ArrayList<Integer>();
         var processedXY = new HashSet<String>();
         for (int i = 0, max = grid.length; i < max; i++) {
@@ -57,7 +57,7 @@ public class Day11 {
                 if (ch == '#') {
                     var key = i + "," + j;
                     processedXY.add(key);
-                    var galaxiesDistList = findGalaxiesDist(grid, processedXY, i, j);
+                    var galaxiesDistList = findGalaxyDistCombination(grid, processedXY, i, j);
                     distList.addAll(galaxiesDistList);
                 }
             }
@@ -65,7 +65,7 @@ public class Day11 {
         return distList;
     }
 
-    private List<Integer> findGalaxiesDist(char[][] grid, Set<String> processedXY, int x, int y) {
+    private List<Integer> findGalaxyDistCombination(char[][] grid, Set<String> processedXY, int x, int y) {
         var galaxyDistList = new ArrayList<Integer>();
         for (int i = 0, max = grid.length; i < max; i++) {
             for (int j = 0, max2 = grid[i].length; j < max2; j++) {

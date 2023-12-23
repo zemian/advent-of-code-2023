@@ -1,13 +1,14 @@
 package aoc2023;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
 
 import static aoc2023.TestUtils.assertEquals;
+import static java.util.function.Predicate.not;
 
 public class Day10 {
     public static void main(String[] args) throws Exception {
@@ -16,33 +17,21 @@ public class Day10 {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("aoc2023/DayTemplate-input2.txt");
+            program.runMain("src/aoc2023/DayTemplate-input2.txt");
         }
     }
 
-    private Integer runMain(String inputFilename) throws Exception {
-        var lines = new ArrayList<String>();
+    private Integer runMain(String fileName) throws Exception {
+        System.out.println("Processing input: " + fileName);
+        try (var reader = new BufferedReader(new FileReader(fileName))) {
+            // Get input lines
+            var lines = reader.lines().filter(not(String::isEmpty)).toList();
 
-        System.out.println("Processing input: " + inputFilename);
-        var cl = Thread.currentThread().getContextClassLoader();
-        var ins = cl.getResourceAsStream(inputFilename);
-        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.isBlank()) {
-                    continue;
-                }
-                // Process Line
-                lines.add(line);
-            }
-        }
-
-        // Convert lines into grid
-        char[][] grid = new char[lines.size()][lines.getFirst().length()];
-        int x = -1, y = -1;
-        for (int i = 0; i < lines.size(); i++) {
-            grid[i] = lines.get(i).toCharArray();
-            if (x < 0) {
+            // Convert lines into grid, and capture 'S' indexes
+            char[][] grid = new char[lines.size()][lines.getFirst().length()];
+            int x = -1, y = -1;
+            for (int i = 0; i < lines.size(); i++) {
+                grid[i] = lines.get(i).toCharArray();
                 for (int j = 0; j < grid[i].length; j++) {
                     if (grid[i][j] == 'S') {
                         x = i;
@@ -50,124 +39,115 @@ public class Day10 {
                     }
                 }
             }
-        }
+            //TestUtils.printGrid(grid);
 
-        // Process grid
-        var processedCells = new HashSet<Cell>();
-        var stack = new Stack<Cell>();
-        var prevCell = new Cell(x, y);
-        stack.add(prevCell);
-
-        var done = false;
-        var stepCount = 0;
-        while (!done && !stack.isEmpty()) {
-            var cell = stack.pop();
-            processedCells.add(cell);
-            var adjCells = findAdjCells(grid, cell);
-            Cell finalPrevCell = prevCell;
-            adjCells = adjCells.stream().filter(e -> !e.equals(finalPrevCell)).toList();
-
-            var end = adjCells.stream().filter(e -> grid[e.x][e.y] == 'S').findAny();
-            if (end.isPresent()) {
-                done = true;
-                System.out.println("** Back to start 'S'");
-                stepCount++;
-            } else {
-                adjCells = adjCells.stream().filter(e -> !processedCells.contains(e)).toList();
-                if (!adjCells.isEmpty()) {
-                    adjCells.forEach(stack::push);
-                    stepCount++;
-                } else {
-                    stepCount--;
+            // Start with 'S' and find the loop back to 'S' in the grid
+            var startCell = new Cell(x, y);
+            var done = false;
+            var stepCount = 0;
+            var fromCell = new Cell(x, y);
+            var toCell = new Cell(x, y);
+            System.out.println("Start " + startCell);
+            while (!done) {
+                var nextCell = findNextCell(grid, fromCell, toCell);
+                if (nextCell == null) {
+                    throw new RuntimeException("Failed to find cell path! fromCell=" + fromCell + ", toCell=" + toCell);
                 }
-
-                System.out.println("Grid: " + grid[cell.x][cell.y] + ", " + cell + ", adjCells=" + adjCells);
-                prevCell = cell;
+                stepCount++;
+                fromCell = toCell;
+                toCell = nextCell;
+                if (nextCell.x == startCell.x && nextCell.y == startCell.y) {
+                    done = true;
+                }
+                //System.out.println("Next " + nextCell);
             }
-        }
 
-        var maxSteps = (stepCount) / 2;
-        System.out.println("Step Count: " + maxSteps + ", stepCount=" + stepCount);
-        return maxSteps;
+            var halfSteps = (stepCount) / 2;
+            System.out.println("Step Count: " + halfSteps);
+            return halfSteps;
+        }
     }
 
-    private List<Cell> findAdjCells(char[][] grid, Cell cell) {
-        int x = cell.x, y = cell.y;
-        var cells = new ArrayList<Cell>();
+    private Cell findNextCell(char[][] grid, Cell fromCell, Cell toCell) {
+        int x = toCell.x, y = toCell.y;
+        var val = grid[x][y];
 
         int cx, cy;
-        // Check right, if from is a vertical pipe, you can't go right or left
-        if (y < grid[0].length - 1 && grid[x][y] != '|') {
+        // Check right
+        if (y < grid[0].length - 1 && !(val == '7' || val == 'J' || val == '|') ) {
             cx = x;
             cy = y + 1;
-            if (grid[cx][cy] == 'S'
+            if (!(fromCell.x == cx && fromCell.y == cy)
+                && (grid[cx][cy] == 'S'
                     || grid[cx][cy] == '-'
                     || grid[cx][cy] == '7'
-                    || grid[cx][cy] == 'J') {
-                cells.add(new Cell(cx, cy));
+                    || grid[cx][cy] == 'J')) {
+                return new Cell(cx, cy);
             }
         }
 
         // Check left
-        if (y > 0 && grid[x][y] != '|') {
+        if (y > 0 && !(val == 'F' || val == 'L' || val == '|')) {
             cx = x;
             cy = y - 1;
-            if (grid[cx][cy] == 'S'
+            if (!(fromCell.x == cx && fromCell.y == cy)
+                    && (grid[cx][cy] == 'S'
                             || grid[cx][cy] == '-'
                             || grid[cx][cy] == 'F'
-                            || grid[cx][cy] == 'L') {
-                cells.add(new Cell(cx, cy));
+                            || grid[cx][cy] == 'L')) {
+                return new Cell(cx, cy);
             }
         }
 
         // Check top, if from is a horizontal pipe, you can't go up or down
-        if (x > 0 && grid[x][y] != '-') {
+        if (x > 0 && !(val == 'F' || val == '7' || val == '-')) {
             cx = x - 1;
             cy = y;
-            if (grid[cx][cy] == 'S'
+            if (!(fromCell.x == cx && fromCell.y == cy)
+                    && (grid[cx][cy] == 'S'
                             || grid[cx][cy] == '|'
                             || grid[cx][cy] == 'F'
-                            || grid[cx][cy] == '7') {
-                cells.add(new Cell(cx, cy));
+                            || grid[cx][cy] == '7')) {
+                return new Cell(cx, cy);
             }
         }
 
         // Check bottom
-        if (x < grid.length - 1 && grid[x][y] != '-') {
+        if (x < grid.length - 1 && !(val == 'L' || val == 'J' || val == '-')) {
             cx = x + 1;
             cy = y;
-            if (grid[cx][cy] == 'S'
+            if (!(fromCell.x == cx && fromCell.y == cy)
+                    && (grid[cx][cy] == 'S'
                             || grid[cx][cy] == '|'
                             || grid[cx][cy] == 'L'
-                            || grid[cx][cy] == 'J') {
-                cells.add(new Cell(cx, cy));
+                            || grid[cx][cy] == 'J')) {
+                return new Cell(cx, cy);
             }
         }
 
-//        System.out.println("Cell[" + x +"][" +  y + "]: " + grid[x][y] + ", adjCells: " + cells);
-        return cells;
+        return null;
     }
 
     public record Cell(int x, int y) {}
-
-    public record LoopResult(boolean done, int maxStep) {}
 
     private void runTests() throws Exception {
         testMain();
     }
 
     private void testMain() throws Exception {
-        Integer sum = runMain("aoc2023/Day10-input1a.txt");
-        assertEquals(sum, 4);
-        sum = runMain("aoc2023/Day10-input1a2.txt");
+        Integer sum = runMain("src/aoc2023/Day10-input1a.txt");
         assertEquals(sum, 4);
 
-        sum = runMain("aoc2023/Day10-input1b.txt");
+        sum = runMain("src/aoc2023/Day10-input1a2.txt");
+        assertEquals(sum, 4);
+
+        sum = runMain("src/aoc2023/Day10-input1b.txt");
         assertEquals(sum, 8);
-//        sum = runMain("aoc2023/Day10-input1b2.txt");
-//        assertEquals(sum, 8);
 
-        sum = runMain("aoc2023/Day10-input2.txt");
-        assertEquals(sum, 5);
+        sum = runMain("src/aoc2023/Day10-input1b2.txt");
+        assertEquals(sum, 8);
+
+        sum = runMain("src/aoc2023/Day10-input2.txt");
+        assertEquals(sum, 6778);
     }
 }

@@ -31,20 +31,11 @@ public class Day11 {
                     .map(e -> Arrays.stream(e.split("")).collect(Collectors.toList()))
                     .collect(Collectors.toList());
             char[][] grid = expand(gridList);
-            //printGrid(grid);
+            //TestUtils.printGrid(grid);
             var distList = findAllGalaxyDistPairs(grid);
             int sum = distList.stream().reduce(0, Integer::sum);
             System.out.println("Sum: " + sum + ", pairs count: " + distList.size());
             return sum;
-        }
-    }
-
-    private void printGrid(char[][] grid) {
-        for (char[] chars : grid) {
-            for (char ch : chars) {
-                System.out.print(ch);
-            }
-            System.out.println();
         }
     }
 

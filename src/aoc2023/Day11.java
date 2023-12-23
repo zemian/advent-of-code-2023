@@ -98,7 +98,7 @@ public class Day11 {
         var firstGridLineMax = gridList.getFirst().size();
         for (int i = 0; i < firstGridLineMax; i++) {
             int finalI = i + addedLinesCount;
-            if (!(gridList.stream().map(x -> x.get(finalI)).allMatch(ch -> ch.equals("."))))
+            if (!(gridList.stream().map(row -> row.get(finalI)).allMatch(ch -> ch.equals("."))))
                 continue;
             for (var gridLine : gridList) {
                 gridLine.add(i + addedLinesCount, ".");

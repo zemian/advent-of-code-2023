@@ -20,10 +20,8 @@ public class DayTemplate {
     private Integer runMain(String fileName) throws Exception {
         System.out.println("Processing input: " + fileName);
         try (var reader = new BufferedReader(new FileReader(fileName))) {
-            reader.lines().filter(not(String::isEmpty)).forEach(line -> {
-                // Process Line
-                System.out.println(line);
-            });
+            var lines = reader.lines().filter(not(String::isEmpty)).toList();
+            System.out.println(lines);
         }
 
         return 0;

@@ -135,6 +135,7 @@ public class Day11b {
         sum = runMain("src/aoc2023/Day11-input1.txt", 100);
         assertEquals(sum, 8410L);
 
+        //TODO: Why I don't get the same answer as in part 1?
         sum = runMain("src/aoc2023/Day11-input2.txt", 1);
         assertEquals(sum, 9329143L);
 

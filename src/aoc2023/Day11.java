@@ -31,7 +31,7 @@ public class Day11 {
                     .map(e -> Arrays.stream(e.split("")).collect(Collectors.toList()))
                     .collect(Collectors.toList());
             char[][] grid = expand(gridList);
-            printGrid(grid);
+            //printGrid(grid);
             var distList = findGalaxiesDist(grid);
             int sum = distList.stream().reduce(0, Integer::sum);
             System.out.println("Sum: " + sum + ", pairs count: " + distList.size());
@@ -49,7 +49,7 @@ public class Day11 {
     }
 
     private List<Integer> findGalaxiesDist(char[][] grid) {
-        var ret = new ArrayList<Integer>();
+        var distList = new ArrayList<Integer>();
         var processedXY = new HashSet<String>();
         for (int i = 0, max = grid.length; i < max; i++) {
             for (int j = 0, max2 = grid[i].length; j < max2; j++) {
@@ -57,16 +57,16 @@ public class Day11 {
                 if (ch == '#') {
                     var key = i + "," + j;
                     processedXY.add(key);
-                    var distList = findGalaxiesDist(grid, processedXY, i, j);
-                    ret.addAll(distList);
+                    var galaxiesDistList = findGalaxiesDist(grid, processedXY, i, j);
+                    distList.addAll(galaxiesDistList);
                 }
             }
         }
-        return ret;
+        return distList;
     }
 
     private List<Integer> findGalaxiesDist(char[][] grid, Set<String> processedXY, int x, int y) {
-        var ret = new ArrayList<Integer>();
+        var galaxyDistList = new ArrayList<Integer>();
         for (int i = 0, max = grid.length; i < max; i++) {
             for (int j = 0, max2 = grid[i].length; j < max2; j++) {
                 var key = i + "," + j;
@@ -75,12 +75,12 @@ public class Day11 {
                 var ch = grid[i][j];
                 if (ch == '#') {
                     var dist = Math.abs(x - i) + Math.abs(y - j);
-                    ret.add(dist);
-                    System.out.println("Dist from (" + x + "," + y + ") to (" + i + "," + j + "): " + dist);
+                    galaxyDistList.add(dist);
+                    //System.out.println("Dist from (" + x + "," + y + ") to (" + i + "," + j + "): " + dist);
                 }
             }
         }
-        return ret;
+        return galaxyDistList;
     }
 
     private char[][] expand(List<List<String>> gridList) {

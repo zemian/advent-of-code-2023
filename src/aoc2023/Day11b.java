@@ -73,7 +73,9 @@ public class Day11b {
                     // Expand rows
                     for (int k = Math.min(x, i), maxK = k + xDist; k < maxK; k++) {
                         if (isExpandRow(grid, k)) {
-                            xDist += (expandTimes > 1 ? expandTimes - 1 : expandTimes);
+                            xDist += expandTimes;
+                            if (expandTimes > 1)
+                                xDist--;
                             //System.out.printf("  Expanding row(%d) by %d, xDist=%d\n", k, expandTimes, xDist);
                         }
                     }
@@ -82,7 +84,9 @@ public class Day11b {
                     // Expand columns
                     for (int k = Math.min(y, j), maxK = k + yDist; k < maxK; k++) {
                         if (isExpandCol(grid, k)) {
-                            yDist += (expandTimes > 1 ? expandTimes - 1 : expandTimes);
+                            yDist += expandTimes;
+                            if (expandTimes > 1)
+                                yDist--;
                             //System.out.printf("  Expanding col(%d) by %d, yDist=%d\n", k, expandTimes, yDist);
                         }
                     }
@@ -131,7 +135,10 @@ public class Day11b {
         sum = runMain("src/aoc2023/Day11-input1.txt", 100);
         assertEquals(sum, 8410L);
 
+        sum = runMain("src/aoc2023/Day11-input2.txt", 1);
+        assertEquals(sum, 9329143L);
+
         sum = runMain("src/aoc2023/Day11-input2.txt", 1_000_000);
-        assertEquals(sum, 751044867439L);
+        assertEquals(sum, -1L);
     }
 }

@@ -47,7 +47,7 @@ public class Day10 {
             var stepCount = 0;
             var fromCell = new Cell(x, y);
             var toCell = new Cell(x, y);
-            System.out.println("Start " + startCell);
+            //System.out.println("Start " + startCell);
             while (!done) {
                 var nextCell = findNextCell(grid, fromCell, toCell);
                 if (nextCell == null) {

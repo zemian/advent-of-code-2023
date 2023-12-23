@@ -21,5 +21,10 @@ public class TestAll {
 //        Day8b.main(testArgs);
         Day9.main(testArgs);
         Day9b.main(testArgs);
+//        Day10.main(testArgs);
+//        Day10b.main(testArgs);
+        Day11.main(testArgs);
+        Day11b.main(testArgs);
+        Day15.main(testArgs);
     }
 }

@@ -3,6 +3,7 @@ package aoc2023;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.List;
+import java.util.function.Function;
 
 import static java.util.function.Predicate.not;
 

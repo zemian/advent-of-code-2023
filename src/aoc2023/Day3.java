@@ -1,7 +1,5 @@
 package aoc2023;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -9,52 +7,34 @@ import java.util.ArrayList;
 import static aoc2023.Utils.assertEquals;
 
 public class Day3 {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var program = new Day3();
         if (args.length > 0 && args[0].equals("test")) {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("aoc2023/Day3-input2.txt", 140, 140);
+            program.runMain("src/aoc2023/Day3-input2.txt");
         }
     }
 
-    private Integer runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
-        System.out.println("Processing input: " + inputFilename + "with grid size " + gridRowSize + ", " + gridColSize);
+    private Integer runMain(String fileName) {
+        System.out.println("Processing input: " + fileName);
+        var grid = Utils.readGrid(fileName);
         var startTime = Instant.now();
         var partNums = new ArrayList<Integer>();
-        char[][] grid = new char[gridRowSize][gridColSize];
 
-        var cl = Thread.currentThread().getContextClassLoader();
-        var ins = cl.getResourceAsStream(inputFilename);
-        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
-            String line;
-
-            //Populate grid
-            int lineCount = 0;
-            while ((line = reader.readLine()) != null) {
-                if (!line.isBlank()) {
-                    for (int i = 0; i < line.length(); i++) {
-                        grid[lineCount][i] = line.charAt(i);
+        // Find part nums next to a symbol
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                char val = grid[i][j];
+                if (Character.isDigit(val)) {
+                    var numLoc = findNumLoc(grid, i, j);
+                    //System.out.println("\nFound PartNum: " + numLoc.partNum);
+                    if (hasSymbolAround(grid, numLoc)) {
+                        partNums.add(numLoc.partNum);
+                        System.out.println("Found PartNum: " + numLoc.partNum + " with symbol");
                     }
-                    lineCount++;
-                    //System.out.println(line + " " + new String(grid[lineCount - 1]));
-                }
-            }
-
-            // Find part nums next to a symbol
-            for (int i = 0; i < grid.length; i++) {
-                for (int j = 0; j < grid[i].length; j++) {
-                    char val = grid[i][j];
-                    if (Character.isDigit(val)) {
-                        var numLoc = findNumLoc(grid, i, j);
-                        //System.out.println("\nFound PartNum: " + numLoc.partNum);
-                        if (hasSymbolAround(grid, numLoc)) {
-                            partNums.add(numLoc.partNum);
-                            System.out.println("Found PartNum: " + numLoc.partNum + " with symbol");
-                        }
-                        j = numLoc.endj;
-                    }
+                    j = numLoc.endj;
                 }
             }
         }
@@ -146,7 +126,7 @@ public class Day3 {
 
 
 
-    private void runTests() throws Exception {
+    private void runTests() {
         testFindNumLoc();
         testIsSymbol();
         testHasSymbolAround();
@@ -296,14 +276,14 @@ public class Day3 {
         assertEquals(isSymbol('9'), false);
     }
 
-    private void testMain() throws Exception {
-        Integer sum = runMain("aoc2023/Day3-input1.txt", 10, 10);
+    private void testMain() {
+        Integer sum = runMain("src/aoc2023/Day3-input1.txt");
         assertEquals(sum, 4361);
 
-        sum = runMain("aoc2023/Day3-input1b.txt", 11, 10);
+        sum = runMain("src/aoc2023/Day3-input1b.txt");
         assertEquals(sum, 4361);
 
-        sum = runMain("aoc2023/Day3-input2.txt", 140, 140);
+        sum = runMain("src/aoc2023/Day3-input2.txt");
         assertEquals(sum, 540025);
     }
 }

@@ -1,7 +1,5 @@
 package aoc2023;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,31 +15,23 @@ import static aoc2023.Day7b.HandType.TWO_PAIR;
 import static aoc2023.Utils.assertEquals;
 
 public class Day7b {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var program = new Day7b();
         if (args.length > 0 && args[0].equals("test")) {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("aoc2023/Day7-input2.txt");
+            program.runMain("src/aoc2023/Day7-input2.txt");
         }
     }
 
-    private Long runMain(String inputFilename) throws Exception {
+    private Long runMain(String fileName) {
+        System.out.println("Processing input: " + fileName);
         var hands = new ArrayList<Hand>();
-        System.out.println("Processing input: " + inputFilename);
-        var cl = Thread.currentThread().getContextClassLoader();
-        var ins = cl.getResourceAsStream(inputFilename);
-        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.isBlank()) {
-                    continue;
-                }
-                // Process Line
-                var parts = line.trim().split(" ");
-                hands.add(new Hand(parts[0], Integer.parseInt(parts[1])));
-            }
+        var lines = Utils.readLines(fileName);
+        for (String line : lines) {
+            var parts = line.trim().split(" ");
+            hands.add(new Hand(parts[0], Integer.parseInt(parts[1])));
         }
 
         Collections.sort(hands);
@@ -192,7 +182,7 @@ public class Day7b {
         }
     }
 
-    private void runTests() throws Exception {
+    private void runTests() {
         testHandType();
         testCompareHand();
         testMain();
@@ -223,11 +213,11 @@ public class Day7b {
         assertEquals(HIGH_CARD.compareTo(ONE_PAIR), 1);
     }
 
-    private void testMain() throws Exception {
-        Long sum = runMain("aoc2023/Day7-input1.txt");
+    private void testMain() {
+        Long sum = runMain("src/aoc2023/Day7-input1.txt");
         assertEquals(sum, 5905L);
 
-        sum = runMain("aoc2023/Day7-input2.txt");
+        sum = runMain("src/aoc2023/Day7-input2.txt");
         assertEquals(sum, 250382098L);
     }
 }

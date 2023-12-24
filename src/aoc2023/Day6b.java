@@ -1,7 +1,5 @@
 package aoc2023;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.LongStream;
@@ -9,35 +7,32 @@ import java.util.stream.LongStream;
 import static aoc2023.Utils.assertEquals;
 
 public class Day6b {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var program = new Day6b();
         if (args.length > 0 && args[0].equals("test")) {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("aoc2023/Day6-input2.txt");
+            program.runMain("src/aoc2023/Day6-input2.txt");
         }
     }
 
-    private Long runMain(String inputFilename) throws Exception {
-        System.out.println("Processing input: " + inputFilename);
-        var cl = Thread.currentThread().getContextClassLoader();
-        var ins = cl.getResourceAsStream(inputFilename);
-        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
-            var time = reader.readLine();
-            var dist = reader.readLine();
-            var timeParts = time.split(":");
-            var times = timeParts[1].trim().split("\\s+");
-            var distParts = dist.split(":");
-            var dists = distParts[1].trim().split("\\s+");
+    private Long runMain(String fileName) {
+        System.out.println("Processing input: " + fileName);
+        var lines = Utils.readLines(fileName);
+        var time = lines.get(0);
+        var dist = lines.get(1);
+        var timeParts = time.split(":");
+        var times = timeParts[1].trim().split("\\s+");
+        var distParts = dist.split(":");
+        var dists = distParts[1].trim().split("\\s+");
 
-            var t = Long.parseLong(String.join("", times));
-            var d = Long.parseLong(String.join("", dists));
-            var c = LongStream.range(1, t).map(a -> calcDist(a, t)).filter(b -> b > d).count();
-            System.out.println("Total number of ways: " + c);
+        var t = Long.parseLong(String.join("", times));
+        var d = Long.parseLong(String.join("", dists));
+        var c = LongStream.range(1, t).map(a -> calcDist(a, t)).filter(b -> b > d).count();
+        System.out.println("Total number of ways: " + c);
 
-            return c;
-        }
+        return c;
     }
 
     private long calcDist(long buttonTime, long maxTime) {
@@ -54,16 +49,16 @@ public class Day6b {
         assertEquals(ways, List.of(0, 6, 10, 12, 12, 10, 6, 0));
     }
 
-    private void runTests() throws Exception {
+    private void runTests() {
         testCalcDist();
         testMain();
     }
 
-    private void testMain() throws Exception {
-        Long sum = runMain("aoc2023/Day6-input1.txt");
+    private void testMain() {
+        Long sum = runMain("src/aoc2023/Day6-input1.txt");
         assertEquals(sum, 71503L);
 
-        sum = runMain("aoc2023/Day6-input2.txt");
+        sum = runMain("src/aoc2023/Day6-input2.txt");
         assertEquals(sum, 34934171L);
     }
 }

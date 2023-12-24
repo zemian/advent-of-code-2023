@@ -1,7 +1,5 @@
 package aoc2023;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -10,64 +8,46 @@ import java.util.HashMap;
 import static aoc2023.Utils.assertEquals;
 
 public class Day3b {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var program = new Day3b();
         if (args.length > 0 && args[0].equals("test")) {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("aoc2023/Day3-input2.txt", 140, 140);
+            program.runMain("src/aoc2023/Day3-input2.txt");
         }
     }
 
-    private Integer runMain(String inputFilename, int gridRowSize, int gridColSize) throws Exception {
-        System.out.println("Processing input: " + inputFilename + "with grid size " + gridRowSize + ", " + gridColSize);
+    private Integer runMain(String fileName) {
+        System.out.println("Processing input: " + fileName);
         var startTime = Instant.now();
         var powerNums = new ArrayList<Integer>();
-        char[][] grid = new char[gridRowSize][gridColSize];
+        char[][] grid = Utils.readGrid(fileName);
 
-        var cl = Thread.currentThread().getContextClassLoader();
-        var ins = cl.getResourceAsStream(inputFilename);
-        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
-            String line;
-
-            //Populate grid
-            int lineCount = 0;
-            while ((line = reader.readLine()) != null) {
-                if (!line.isBlank()) {
-                    for (int i = 0; i < line.length(); i++) {
-                        grid[lineCount][i] = line.charAt(i);
-                    }
-                    lineCount++;
-                    //System.out.println(line + " " + new String(grid[lineCount - 1]));
-                }
-            }
-
-            // Find a pair of part nums next to a symbol that's connected
-            // We will calculate the power of these two and the sum of all later.
-            var symbolNumLocMap = new HashMap<String, NumLoc>();
-            for (int i = 0; i < grid.length; i++) {
-                for (int j = 0; j < grid[i].length; j++) {
-                    char val = grid[i][j];
-                    if (Character.isDigit(val)) {
-                        var numLoc = findNumLoc(grid, i, j);
-                        //System.out.println("\nFound PartNum: " + numLoc.partNum);
-                        if (checkAndUpdateSymbol(grid, numLoc)) {
-                            var key = numLoc.si + "," + numLoc.sj;
-                            System.out.println("Found PartNum: " + numLoc.partNum +
-                                    " with symbol: " + numLoc.symbol + " at " + key);
-                            if (symbolNumLocMap.containsKey(key)) {
-                                var n1 = symbolNumLocMap.get(key);
-                                var power = n1.partNum * numLoc.partNum;
+        // Find a pair of part nums next to a symbol that's connected
+        // We will calculate the power of these two and the sum of all later.
+        var symbolNumLocMap = new HashMap<String, NumLoc>();
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                char val = grid[i][j];
+                if (Character.isDigit(val)) {
+                    var numLoc = findNumLoc(grid, i, j);
+                    //System.out.println("\nFound PartNum: " + numLoc.partNum);
+                    if (checkAndUpdateSymbol(grid, numLoc)) {
+                        var key = numLoc.si + "," + numLoc.sj;
+                        System.out.println("Found PartNum: " + numLoc.partNum +
+                                " with symbol: " + numLoc.symbol + " at " + key);
+                        if (symbolNumLocMap.containsKey(key)) {
+                            var n1 = symbolNumLocMap.get(key);
+                            var power = n1.partNum * numLoc.partNum;
 //                                System.out.println("  Found power nums: " + n1.partNum + " * " + numLoc.partNum);
-                                powerNums.add(power);
-                                symbolNumLocMap.remove(key);
-                            } else {
-                                symbolNumLocMap.put(key, numLoc);
-                            }
+                            powerNums.add(power);
+                            symbolNumLocMap.remove(key);
+                        } else {
+                            symbolNumLocMap.put(key, numLoc);
                         }
-                        j = numLoc.endj;
                     }
+                    j = numLoc.endj;
                 }
             }
         }
@@ -170,7 +150,7 @@ public class Day3b {
         public int si, sj; // symbol location
     }
 
-    private void runTests() throws Exception {
+    private void runTests() {
         testFindNumLocWithSymbol();
         testMain();
     }
@@ -207,11 +187,11 @@ public class Day3b {
         assertEquals(numLoc.sj, 4);
     }
 
-    private void testMain() throws Exception {
-        Integer sum = runMain("aoc2023/Day3-input1.txt", 10, 10);
+    private void testMain() {
+        Integer sum = runMain("src/aoc2023/Day3-input1.txt");
         assertEquals(sum, 467835);
 
-        sum = runMain("aoc2023/Day3-input2.txt", 140, 140);
+        sum = runMain("src/aoc2023/Day3-input2.txt");
         assertEquals(sum, 84584891);
     }
 }

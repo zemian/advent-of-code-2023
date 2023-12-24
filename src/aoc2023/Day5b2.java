@@ -1,7 +1,7 @@
 package aoc2023;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.FileReader;
 import java.io.StringReader;
 import java.time.Duration;
 import java.time.Instant;
@@ -22,11 +22,11 @@ public class Day5b2 {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("aoc2023/Day5-input1.txt");
+            program.runMain("src/aoc2023/Day5-input1.txt");
         }
     }
 
-    private Long runMain(String inputFilename) throws Exception {
+    private Long runMain(String fileName) throws Exception {
         // NOTE: Java Integer.MAX_VALUE can only handle 2_147_483_647, so we will use Long to handle larger num
         // NOTE2: Due to large input size, we can't just store entire mapping in variable or else it runs out
         //        of memory.
@@ -49,11 +49,9 @@ public class Day5b2 {
                 humidityToLocationMap = null;
         var startTime = Instant.now();
 
-        System.out.println("Processing input: " + inputFilename);
+        System.out.println("Processing input: " + fileName);
         System.out.println("Started on: " + new Date());
-        var cl = Thread.currentThread().getContextClassLoader();
-        var ins = cl.getResourceAsStream(inputFilename);
-        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
+        try (var reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) {
@@ -218,10 +216,10 @@ public class Day5b2 {
     }
 
     private void testMain() throws Exception {
-        Long minLoc = runMain("aoc2023/Day5-input1.txt");
+        Long minLoc = runMain("src/aoc2023/Day5-input1.txt");
         assertEquals(minLoc, 46L);
 
-        minLoc = runMain("aoc2023/Day5-input2.txt");
+        minLoc = runMain("src/aoc2023/Day5-input2.txt");
         assertEquals(minLoc, 37806486L);
     }
 }

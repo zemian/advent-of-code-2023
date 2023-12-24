@@ -1,7 +1,5 @@
 package aoc2023;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,7 +11,7 @@ import static aoc2023.Utils.assertEquals;
 import static java.util.function.Predicate.not;
 
 public class Day11 {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var program = new Day11();
         if (args.length > 0 && args[0].equals("test")) {
             program.runTests();
@@ -23,20 +21,18 @@ public class Day11 {
         }
     }
 
-    private Integer runMain(String fileName) throws Exception {
-        System.out.println("Processing input: " + fileName);
-        try (var reader = new BufferedReader(new FileReader(fileName))) {
-            //NOTE: Need to make use a mutable list for processing later.
-            List<List<String>> gridList = reader.lines().filter(not(String::isEmpty))
-                    .map(e -> Arrays.stream(e.split("")).collect(Collectors.toList()))
-                    .collect(Collectors.toList());
-            char[][] grid = expand(gridList);
-            //TestUtils.printGrid(grid);
-            var distList = findAllGalaxyDistPairs(grid);
-            int sum = distList.stream().reduce(0, Integer::sum);
-            System.out.println("Sum: " + sum + ", pairs count: " + distList.size());
-            return sum;
-        }
+    private Integer runMain(String fileName) {
+        var lines = Utils.readLines(fileName);
+        // Convert read-only lines to mutable list
+        List<List<String>> gridList = lines.stream()
+                .map(e -> Arrays.stream(e.split("")).collect(Collectors.toList()))
+                .collect(Collectors.toList());
+        char[][] grid = expand(gridList);
+        //TestUtils.printGrid(grid);
+        var distList = findAllGalaxyDistPairs(grid);
+        int sum = distList.stream().reduce(0, Integer::sum);
+        System.out.println("Sum: " + sum + ", pairs count: " + distList.size());
+        return sum;
     }
 
     private List<Integer> findAllGalaxyDistPairs(char[][] grid) {
@@ -103,7 +99,7 @@ public class Day11 {
                 .toArray(char[][]::new);
     }
 
-    private void runTests() throws Exception {
+    private void runTests() {
         testExpand();
         testMain();
     }
@@ -138,7 +134,7 @@ public class Day11 {
         assertEquals(String.valueOf(g[3]), "#..");
     }
 
-    private void testMain() throws Exception {
+    private void testMain() {
         Integer sum = runMain("src/aoc2023/Day11-input1.txt");
         assertEquals(sum, 374);
 

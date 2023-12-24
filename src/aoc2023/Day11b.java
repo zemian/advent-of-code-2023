@@ -1,7 +1,5 @@
 package aoc2023;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,10 +9,9 @@ import java.util.Map;
 import java.util.Set;
 
 import static aoc2023.Utils.assertEquals;
-import static java.util.function.Predicate.not;
 
 public class Day11b {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var program = new Day11b();
         if (args.length > 0 && args[0].equals("test")) {
             program.runTests();
@@ -24,20 +21,13 @@ public class Day11b {
         }
     }
 
-    private Long runMain(String fileName, int expandTimes) throws Exception {
+    private Long runMain(String fileName, int expandTimes) {
         System.out.println("Processing input: " + fileName);
-        try (var reader = new BufferedReader(new FileReader(fileName))) {
-            List<List<String>> gridList = reader.lines().filter(not(String::isEmpty))
-                    .map(e -> Arrays.stream(e.split("")).toList())
-                    .toList();
-            char[][] grid = gridList.stream()
-                    .map(charList -> String.join("", charList).toCharArray())
-                    .toArray(char[][]::new);
-            var distList = findAllGalaxyDistPairs(grid, expandTimes);
-            Long sum = distList.stream().reduce(0L, Long::sum);
-            System.out.println("Sum: " + sum + ", pairs count: " + distList.size());
-            return sum;
-        }
+        var grid = Utils.readGrid(fileName);
+        var distList = findAllGalaxyDistPairs(grid, expandTimes);
+        Long sum = distList.stream().reduce(0L, Long::sum);
+        System.out.println("Sum: " + sum + ", pairs count: " + distList.size());
+        return sum;
     }
 
     private List<Long> findAllGalaxyDistPairs(char[][] grid, int expandTimes) {
@@ -119,11 +109,11 @@ public class Day11b {
         return expand;
     }
 
-    private void runTests() throws Exception {
+    private void runTests() {
         testMain();
     }
 
-    private void testMain() throws Exception {
+    private void testMain() {
         Long sum = runMain("src/aoc2023/Day11-input1.txt", 1);
         assertEquals(sum, 374L);
 

@@ -1,38 +1,24 @@
 package aoc2023;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import static aoc2023.Utils.assertEquals;
 
 public class Day15 {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var program = new Day15();
         if (args.length > 0 && args[0].equals("test")) {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("aoc2023/Day15-input1.txt");
+            program.runMain("src/aoc2023/Day15-input1.txt");
         }
     }
 
-    private Integer runMain(String inputFilename) throws Exception {
-        var sum = 0;
-        System.out.println("Processing input: " + inputFilename);
-        var cl = Thread.currentThread().getContextClassLoader();
-        var ins = cl.getResourceAsStream(inputFilename);
-        try (var reader = new BufferedReader(new InputStreamReader(ins))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.isBlank()) {
-                    continue;
-                }
-                // Process Line
-                sum += hashLineSum(line);
-            }
-        }
-
+    private Integer runMain(String fileName) {
+        System.out.println("Processing input: " + fileName);
+        var lines = Utils.readLines(fileName);
+        var sum = lines.stream().map(this::hashLineSum).reduce(0, Integer::sum);
         System.out.println("Hash sum: " + sum);
         return sum;
     }
@@ -45,7 +31,7 @@ public class Day15 {
         return Arrays.stream(line.split(",")).map(this::hash).reduce(0, Integer::sum);
     }
 
-    private void runTests() throws Exception {
+    private void runTests() {
         testHASH();
         testMain();
     }
@@ -57,8 +43,8 @@ public class Day15 {
         assertEquals(hashLineSum(s), 1320);
     }
 
-    private void testMain() throws Exception {
-        Integer sum = runMain("aoc2023/Day15-input1.txt");
+    private void testMain() {
+        Integer sum = runMain("src/aoc2023/Day15-input1.txt");
         assertEquals(sum, 508552);
     }
 }

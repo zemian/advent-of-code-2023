@@ -1,13 +1,9 @@
 package aoc2023;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-
 import static aoc2023.Utils.assertEquals;
-import static java.util.function.Predicate.not;
 
 public class Day10 {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         var program = new Day10();
         if (args.length > 0 && args[0].equals("test")) {
             program.runTests();
@@ -17,51 +13,46 @@ public class Day10 {
         }
     }
 
-    private Integer runMain(String fileName) throws Exception {
+    private Integer runMain(String fileName) {
         System.out.println("Processing input: " + fileName);
-        try (var reader = new BufferedReader(new FileReader(fileName))) {
-            // Get input lines
-            var lines = reader.lines().filter(not(String::isEmpty)).toList();
-
-            // Convert lines into grid, and capture 'S' indexes
-            char[][] grid = new char[lines.size()][lines.getFirst().length()];
-            int x = -1, y = -1;
-            for (int i = 0; i < lines.size(); i++) {
-                grid[i] = lines.get(i).toCharArray();
-                for (int j = 0; j < grid[i].length; j++) {
-                    if (grid[i][j] == 'S') {
-                        x = i;
-                        y = j;
-                    }
+        // Find the 'S' indexes
+        char[][] grid = Utils.readGrid(fileName);
+        int x = -1, y = -1;
+        FIND_S: for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == 'S') {
+                    x = i;
+                    y = j;
+                    break FIND_S;
                 }
             }
-            //TestUtils.printGrid(grid);
-
-            // Start with 'S' and find the loop back to 'S' in the grid
-            var startCell = new Cell(x, y);
-            var done = false;
-            var stepCount = 0;
-            var fromCell = new Cell(x, y);
-            var toCell = new Cell(x, y);
-            //System.out.println("Start " + startCell);
-            while (!done) {
-                var nextCell = findNextCell(grid, fromCell, toCell);
-                if (nextCell == null) {
-                    throw new RuntimeException("Failed to find cell path! fromCell=" + fromCell + ", toCell=" + toCell);
-                }
-                stepCount++;
-                fromCell = toCell;
-                toCell = nextCell;
-                if (nextCell.x == startCell.x && nextCell.y == startCell.y) {
-                    done = true;
-                }
-                //System.out.println("Next " + nextCell);
-            }
-
-            var halfSteps = (stepCount) / 2;
-            System.out.println("Step Count: " + halfSteps);
-            return halfSteps;
         }
+        //TestUtils.printGrid(grid);
+
+        // Start with 'S' and find the loop back to 'S' in the grid
+        var startCell = new Cell(x, y);
+        var done = false;
+        var stepCount = 0;
+        var fromCell = new Cell(x, y);
+        var toCell = new Cell(x, y);
+        //System.out.println("Start " + startCell);
+        while (!done) {
+            var nextCell = findNextCell(grid, fromCell, toCell);
+            if (nextCell == null) {
+                throw new RuntimeException("Failed to find cell path! fromCell=" + fromCell + ", toCell=" + toCell);
+            }
+            stepCount++;
+            fromCell = toCell;
+            toCell = nextCell;
+            if (nextCell.x == startCell.x && nextCell.y == startCell.y) {
+                done = true;
+            }
+            //System.out.println("Next " + nextCell);
+        }
+
+        var halfSteps = (stepCount) / 2;
+        System.out.println("Step Count: " + halfSteps);
+        return halfSteps;
     }
 
     private Cell findNextCell(char[][] grid, Cell fromCell, Cell toCell) {
@@ -126,11 +117,11 @@ public class Day10 {
 
     public record Cell(int x, int y) {}
 
-    private void runTests() throws Exception {
+    private void runTests() {
         testMain();
     }
 
-    private void testMain() throws Exception {
+    private void testMain() {
         Integer sum = runMain("src/aoc2023/Day10-input1a.txt");
         assertEquals(sum, 4);
 

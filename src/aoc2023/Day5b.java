@@ -8,11 +8,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static aoc2023.TestUtils.assertEquals;
+import static aoc2023.Utils.assertEquals;
 
 public class Day5b {
     public static void main(String[] args) throws Exception {

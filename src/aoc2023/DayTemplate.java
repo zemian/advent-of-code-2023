@@ -3,7 +3,7 @@ package aoc2023;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-import static aoc2023.TestUtils.assertEquals;
+import static aoc2023.Utils.assertEquals;
 import static java.util.function.Predicate.not;
 
 public class DayTemplate {

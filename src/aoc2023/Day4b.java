@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static aoc2023.TestUtils.assertEquals;
+import static aoc2023.Utils.assertEquals;
 
 public class Day4b {
     public static void main(String[] args) throws Exception {

@@ -4,11 +4,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import static aoc2023.TestUtils.assertEquals;
+import static aoc2023.Utils.assertEquals;
 
 public class Day8b {
     public static void main(String[] args) throws Exception {

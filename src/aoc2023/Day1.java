@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import static aoc2023.TestUtils.assertEquals;
+import static aoc2023.Utils.assertEquals;
 
 public class Day1 {
     public static void main(String[] args) throws Exception {

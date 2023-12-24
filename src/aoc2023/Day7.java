@@ -14,7 +14,7 @@ import static aoc2023.Day7.HandType.HIGH_CARD;
 import static aoc2023.Day7.HandType.ONE_PAIR;
 import static aoc2023.Day7.HandType.THREE_OF_A_KIND;
 import static aoc2023.Day7.HandType.TWO_PAIR;
-import static aoc2023.TestUtils.assertEquals;
+import static aoc2023.Utils.assertEquals;
 
 public class Day7 {
     public static void main(String[] args) throws Exception {

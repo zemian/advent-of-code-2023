@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 
-import static aoc2023.TestUtils.assertEquals;
+import static aoc2023.Utils.assertEquals;
 
 public class Day3 {
     public static void main(String[] args) throws Exception {

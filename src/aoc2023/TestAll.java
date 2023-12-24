@@ -12,17 +12,16 @@ public class TestAll {
         Day4.main(testArgs);
         Day4b.main(testArgs);
         Day5.main(testArgs);
-//        Day5b.main(testArgs);
+//        Day5b.main(testArgs); // Will take 3 mins
         Day6.main(testArgs);
         Day6b.main(testArgs);
         Day7.main(testArgs);
         Day7b.main(testArgs);
         Day8.main(testArgs);
-//        Day8b.main(testArgs);
+//        Day8b.main(testArgs); // Will take many days
         Day9.main(testArgs);
         Day9b.main(testArgs);
-//        Day10.main(testArgs);
-//        Day10b.main(testArgs);
+       Day10.main(testArgs);
         Day11.main(testArgs);
         //Day11b.main(testArgs); // Not working yet
         Day15.main(testArgs);

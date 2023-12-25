@@ -39,7 +39,7 @@ public class Day16 {
     }
 
     private List<Cell> traverse(char[][] grid, List<Cell> cells) {
-        System.out.printf("Traverse: cells=%s\n", cells);
+        //System.out.printf("Traverse: cells=%s\n", cells);
         // x = row = UP/DOWN = grid.length, y = col = RIGHT/LEFT = grid[0].length
         var rowLen = grid.length;
         var colLen = grid[0].length;
@@ -53,7 +53,7 @@ public class Day16 {
 
             // Skip invalid cell input - lazy way to let result return invalid indexes and remove them here.
             if (!(x >= 0 && x < rowLen && y >= 0 && y < colLen)) {
-                System.out.println("  Traverse cell (cx,cy) is out of bound: " + x + "," + y);
+                //System.out.println("  Traverse cell (cx,cy) is out of bound: " + x + "," + y);
                 continue;
             }
 
@@ -75,7 +75,7 @@ public class Day16 {
 
             // We shouldn't process anything it's out side of the grid.
             if (!(cx >= 0 && cx < rowLen && cy >= 0 && cy < colLen)) {
-                System.out.println("  Next cell (cx,cy) is out of bound: " + cx + "," + cy);
+                //System.out.println("  Next cell (cx,cy) is out of bound: " + cx + "," + cy);
                 continue;
             }
 

@@ -90,46 +90,46 @@ public class Day16 {
 
             if (dir == RIGHT) {
                 if (mirror == '\\')
-                    result.add(new Cell(cx, cy, DOWN));
+                    result.add(new Cell(cx + 1, cy, DOWN));
                 else if (mirror == '/')
-                    result.add(new Cell(cx, cy, UP));
+                    result.add(new Cell(cx - 1, cy, UP));
                 else if (mirror == '|') { // split
-                    result.add(new Cell(cx, cy, UP));
-                    result.add(new Cell(cx, cy, DOWN));
+                    result.add(new Cell(cx - 1, cy, UP));
+                    result.add(new Cell(cx + 1, cy, DOWN));
                 } else if (mirror == '-') {
-                    result.add(new Cell(cx, cy, dir));
+                    result.add(new Cell(cx, cy + 1, dir));
                 }
             } else if (dir == LEFT) {
                 if (mirror == '\\')
-                    result.add(new Cell(cx, cy, UP));
+                    result.add(new Cell(cx - 1, cy, UP));
                 else if (mirror == '/')
-                    result.add(new Cell(cx, cy, DOWN));
+                    result.add(new Cell(cx + 1, cy, DOWN));
                 else if (mirror == '|')  { // split
-                    result.add(new Cell(cx, cy, UP));
-                    result.add(new Cell(cx, cy, DOWN));
+                    result.add(new Cell(cx - 1, cy, UP));
+                    result.add(new Cell(cx + 1, cy, DOWN));
                 } else if (mirror == '-')
-                    result.add(new Cell(cx, cy, dir));
+                    result.add(new Cell(cx, cy - 1, dir));
             } else if (dir == UP) {
                 if (mirror == '\\')
-                    result.add(new Cell(cx, cy, LEFT));
+                    result.add(new Cell(cx, cy - 1, LEFT));
                 else if (mirror == '/')
-                    result.add(new Cell(cx, cy, RIGHT));
+                    result.add(new Cell(cx, cy + 1, RIGHT));
                 else if (mirror == '|')
-                    result.add(new Cell(cx, cy, dir));
+                    result.add(new Cell(cx + 1, cy, dir));
                 else if (mirror == '-') { // split
-                    result.add(new Cell(cx, cy, LEFT));
-                    result.add(new Cell(cx, cy, RIGHT));
+                    result.add(new Cell(cx, cy - 1, LEFT));
+                    result.add(new Cell(cx, cy + 1, RIGHT));
                 }
             } else if (dir == DOWN) {
                 if (mirror == '\\')
-                    result.add(new Cell(cx, cy, RIGHT));
+                    result.add(new Cell(cx, cy + 1, RIGHT));
                 else if (mirror == '/')
-                    result.add(new Cell(cx, cy, LEFT));
+                    result.add(new Cell(cx, cy - 1, LEFT));
                 else if (mirror == '|')
-                    result.add(new Cell(cx, cy, dir));
+                    result.add(new Cell(cx + 1, cy, dir));
                 else if (mirror == '-') {  // split
-                    result.add(new Cell(cx, cy, LEFT));
-                    result.add(new Cell(cx, cy, RIGHT));
+                    result.add(new Cell(cx, cy - 1, LEFT));
+                    result.add(new Cell(cx, cy + 1, RIGHT));
                 }
             }
         }

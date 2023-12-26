@@ -30,6 +30,7 @@ public class Utils {
     }
 
     public static void printGrid(char[][] grid) {
+        System.out.println("=== " + grid.length + "x" + grid[0].length + " grid ===");
         for (char[] chars : grid) {
             for (char ch : chars) {
                 System.out.print(ch);
@@ -55,4 +56,6 @@ public class Utils {
         var grid = readGrid("src/aoc2023/Day10-input1a.txt");
         printGrid(grid);
     }
+
+    public static record Tuple2<A, B>(A a, B b){}
 }

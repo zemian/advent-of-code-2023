@@ -20,13 +20,18 @@ public class Day16 {
         var grid = Utils.readGrid(fileName);
         //Utils.printGrid(grid);
 
+        var keysCounter = new HashSet<String>();
         var walkedCellKeys = new HashSet<String>();
         var counter = 0;
         var queue = new Stack<Cell>();
         queue.add(new Cell(0, 0, RIGHT));
         while (!queue.isEmpty()) {
-            counter++;
             var cell = queue.pop();
+            var key = cell.x + "," + y;
+            if (!keysCounter.contains(key)) {
+                counter ++;
+                keysCounter.add(key);
+            }
             var nextCells = traverse(grid, cell, walkedCellKeys);
 
             if (!nextCells.isEmpty()) {

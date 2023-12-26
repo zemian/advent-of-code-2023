@@ -39,6 +39,7 @@ public class Day16 {
             }
         }
 
+        System.out.println("Steps = " + counter);
         return counter;
     }
 
@@ -88,7 +89,7 @@ public class Day16 {
         int x = cell.x, y = cell.y;
         var dir = cell.dir;
         var mirror = grid[x][y];
-        System.out.printf("Processing cell=%s\n", cell + ", mirror=" + mirror);
+        //System.out.printf("Processing cell=%s\n", cell + ", mirror=" + mirror);
 
          // Get the next target cell
         if (dir == RIGHT) {

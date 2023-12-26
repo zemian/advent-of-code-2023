@@ -15,126 +15,138 @@ public class Day16 {
         }
     }
 
+    public static class Counter {
+        public int val = 0;
+        public Counter(int val) { this.val = val; }
+    }
+
     private Integer runMain(String fileName) {
         System.out.println("Processing input: " + fileName);
         var grid = Utils.readGrid(fileName);
         //Utils.printGrid(grid);
 
-        List<Cell> energizedCells = new ArrayList<>();
-        boolean done = false;
-        List<Cell> cells = List.of(new Cell(0, 0, RIGHT));
-        while (!done) {
-            var nextCells = traverse(grid, cells);
-            System.out.printf("  nextCells=%s\n", nextCells);
+        var counter = new Counter(0);
+        var queue = new Stack<Cell>();
+        queue.add(new Cell(0, 0, RIGHT));
+        while (!queue.isEmpty()) {
+            counter.val++;
+            var cell = queue.pop();
+            var queueSize = queue.size();
+            var nextCell = traverse(grid, queue, cell, counter);
+            System.out.printf("Walk from cell=%s, nextCell=%s, queue=%s\n", cell, nextCell, queue);
 
-            if (nextCells.isEmpty()) {
-                done = true;
-            } else {
-                energizedCells.addAll(cells);
-                cells = nextCells;
+            if (nextCell != null) {
+                queue.add(nextCell);
             }
         }
 
-        return energizedCells.size();
+        return counter.val;
     }
 
-    private List<Cell> traverse(char[][] grid, List<Cell> cells) {
-        //System.out.printf("Traverse: cells=%s\n", cells);
-        // x = row = UP/DOWN = grid.length, y = col = RIGHT/LEFT = grid[0].length
+    private boolean isValid(char[][] grid, int x, int y) {
         var rowLen = grid.length;
         var colLen = grid[0].length;
+        return (x >= 0 && x < rowLen && y >= 0 && y < colLen);
+    }
 
-        List<Cell> result = new ArrayList<>();
-        for (Cell cell : cells) {
-            System.out.printf("  Processing cell=%s\n", cell);
-            // cell is where it's from, and dir is where it needs to go.
-            int x = cell.x, y = cell.y;
-            var dir = cell.dir;
+    private Cell getValidCell(char[][] grid, int x, int y, Dir dir) {
+        if(isValid(grid, x, y)) {
+            return new Cell(x, y, dir);
+        }
+        return null;
+    }
 
-            // Skip invalid cell input - lazy way to let result return invalid indexes and remove them here.
-            if (!(x >= 0 && x < rowLen && y >= 0 && y < colLen)) {
-                //System.out.println("  Traverse cell (cx,cy) is out of bound: " + x + "," + y);
-                continue;
-            }
 
-            // Get the next target cell
-            int cx = -1, cy = -1;
-            if (dir == RIGHT) {
-                cx = x;
-                cy = y + 1;
-            } else if (dir == LEFT) {
-                cx = x; 
-                cy = y - 1;
-            } else if (dir == UP) {
-                cx = x - 1; 
-                cy = y;
-            } else if (dir == DOWN) {
-                cx = x + 1; 
-                cy = y;
-            }
+    private Cell getValidCellWithQueue(Stack<Cell> queue, char[][] grid, int x, int y, Dir dir, int x2, int y2, Dir dir2) {
+        var cells = new ArrayList<Cell>();
+        if(isValid(grid, x, y)) {
+            cells.add(new Cell(x, y, dir));
+        }
+        if(isValid(grid, x2, y2)) {
+            cells.add(new Cell(x2, y2, dir2));
+        }
 
-            // We shouldn't process anything it's out side of the grid.
-            if (!(cx >= 0 && cx < rowLen && cy >= 0 && cy < colLen)) {
-                //System.out.println("  Next cell (cx,cy) is out of bound: " + cx + "," + cy);
-                continue;
-            }
+        if (cells.size() == 0) {
+            return null;
+        } else  if (cells.size() == 1) {
+            return cells.get(0);
+        } else if (cells.size() == 2) {
+            queue.add(cells.get(0));
+            return cells.get(1);
+        }
+        return null;
+    }
 
-            // Get the next cell target mirror value
-            var mirror = grid[cx][cy];
+    private Cell traverse(char[][] grid, Stack<Cell> queue, Cell cell, Counter counter) {
+        //System.out.printf("Traverse: cells=%s\n", cells);
+        // x = row = UP/DOWN = grid.length, y = col = RIGHT/LEFT = grid[0].length
 
-            // Continue if it's just a space
+        //System.out.printf("  Processing cell=%s\n", cell);
+        // cell is where it's from, and dir is where it needs to go.
+        int x = cell.x, y = cell.y;
+        var dir = cell.dir;
+        var mirror = grid[x][y];
+
+         // Get the next target cell
+        if (dir == RIGHT) {
             if (mirror == '.') {
-                result.add(new Cell(cx, cy, dir));
-                continue;
+                return getValidCell(grid, x, y + 1, dir);
+            } else if (mirror == '\\') {
+                return getValidCell(grid, x + 1, y, DOWN);
+            } else if (mirror == '/') {
+                return getValidCell(grid, x - 1, y, UP);
             }
-
-            if (dir == RIGHT) {
-                if (mirror == '\\')
-                    result.add(new Cell(cx + 1, cy, DOWN));
-                else if (mirror == '/')
-                    result.add(new Cell(cx - 1, cy, UP));
-                else if (mirror == '|') { // split
-                    result.add(new Cell(cx - 1, cy, UP));
-                    result.add(new Cell(cx + 1, cy, DOWN));
-                } else if (mirror == '-') {
-                    result.add(new Cell(cx, cy + 1, dir));
-                }
-            } else if (dir == LEFT) {
-                if (mirror == '\\')
-                    result.add(new Cell(cx - 1, cy, UP));
-                else if (mirror == '/')
-                    result.add(new Cell(cx + 1, cy, DOWN));
-                else if (mirror == '|')  { // split
-                    result.add(new Cell(cx - 1, cy, UP));
-                    result.add(new Cell(cx + 1, cy, DOWN));
-                } else if (mirror == '-')
-                    result.add(new Cell(cx, cy - 1, dir));
-            } else if (dir == UP) {
-                if (mirror == '\\')
-                    result.add(new Cell(cx, cy - 1, LEFT));
-                else if (mirror == '/')
-                    result.add(new Cell(cx, cy + 1, RIGHT));
-                else if (mirror == '|')
-                    result.add(new Cell(cx + 1, cy, dir));
-                else if (mirror == '-') { // split
-                    result.add(new Cell(cx, cy - 1, LEFT));
-                    result.add(new Cell(cx, cy + 1, RIGHT));
-                }
-            } else if (dir == DOWN) {
-                if (mirror == '\\')
-                    result.add(new Cell(cx, cy + 1, RIGHT));
-                else if (mirror == '/')
-                    result.add(new Cell(cx, cy - 1, LEFT));
-                else if (mirror == '|')
-                    result.add(new Cell(cx + 1, cy, dir));
-                else if (mirror == '-') {  // split
-                    result.add(new Cell(cx, cy - 1, LEFT));
-                    result.add(new Cell(cx, cy + 1, RIGHT));
-                }
+            else if (mirror == '|') { // split
+                return getValidCellWithQueue(queue, grid, x - 1, y, UP, x + 1, y, DOWN);
+            } else if (mirror == '-') {
+                return getValidCell(grid, x, y, dir);
+            }
+        } else if (dir == LEFT) {
+            if (mirror == '.') {
+                return new Cell(x, y - 1, dir);
+            } else if (mirror == '\\') {
+                return getValidCell(grid, x - 1, y, UP);
+            }
+            else if (mirror == '/') {
+                return getValidCell(grid, x + 1, y, DOWN);
+            } else if (mirror == '|')  { // split
+                return getValidCellWithQueue(queue, grid, x + 1, y, UP, x - 1, y, DOWN);
+            } else if (mirror == '-') {
+                return getValidCell(grid, x, y, dir);
+            }
+        } else if (dir == UP) {
+            if (mirror == '.') {
+                return new Cell(x - 1, y, dir);
+            } else if (mirror == '\\') {
+                return getValidCell(grid, x, y - 1, LEFT);
+            }
+            else if (mirror == '/') {
+                return getValidCell(grid, x, y + 1, RIGHT);
+            }
+            else if (mirror == '|') {
+                return getValidCell(grid, x, y, dir);
+            }
+            else if (mirror == '-') { // split
+                return getValidCellWithQueue(queue, grid, x, y - 1, LEFT, x, y + 1, RIGHT);
+            }
+        } else if (dir == DOWN) {
+            if (mirror == '.') {
+                return new Cell(x + 1, y, dir);
+            } else if (mirror == '\\') {
+                return getValidCell(grid, x, y + 1, RIGHT);
+            }
+            else if (mirror == '/') {
+                return getValidCell(grid, x, y - 1, LEFT);
+            }
+            else if (mirror == '|') {
+                return getValidCell(grid, x, y, dir);
+            }
+            else if (mirror == '-') {  // split
+                return getValidCellWithQueue(queue, grid, x, y - 1, LEFT, x, y + 1, RIGHT);
             }
         }
 
-        return result;
+        return null;
     }
 
 

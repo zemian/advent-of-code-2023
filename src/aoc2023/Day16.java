@@ -27,7 +27,7 @@ public class Day16 {
         queue.add(new Cell(0, 0, RIGHT));
         while (!queue.isEmpty()) {
             var cell = queue.pop();
-            var key = cell.x + "," + y;
+            var key = cell.x + "," + cell.y;
             if (!keysCounter.contains(key)) {
                 counter ++;
                 keysCounter.add(key);
@@ -148,5 +148,8 @@ public class Day16 {
     private void testMain() {
         Integer sum = runMain("src/aoc2023/Day16-input1.txt");
         assertEquals(sum, 46);
+
+        sum = runMain("src/aoc2023/Day16-input2.txt");
+        assertEquals(sum, 7748);
     }
 }

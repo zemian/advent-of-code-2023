@@ -76,7 +76,7 @@ public class Day16 {
 
          // Get the next target cell
         if (dir == RIGHT) {
-            if (mirror == '.') {
+            if (mirror == '.' || mirror == '-') {
                 cells.addAll(getValidCell(grid, x, y + 1, dir));
             } else if (mirror == '\\') {
                 cells.addAll(getValidCell(grid, x + 1, y, DOWN));
@@ -84,50 +84,35 @@ public class Day16 {
                 cells.addAll(getValidCell(grid, x - 1, y, UP));
             } else if (mirror == '|') { // split
                 cells.addAll(getValidSplitCells(grid, x - 1, y, UP, x + 1, y, DOWN));
-            } else if (mirror == '-') {
-                cells.addAll(getValidCell(grid, x, y + 1, dir));
             }
         } else if (dir == LEFT) {
-            if (mirror == '.') {
+            if (mirror == '.' || mirror == '-') {
                 cells.addAll(getValidCell(grid, x, y - 1, dir));
             } else if (mirror == '\\') {
                 cells.addAll(getValidCell(grid, x - 1, y, UP));
-            }
-            else if (mirror == '/') {
+            } else if (mirror == '/') {
                 cells.addAll(getValidCell(grid, x + 1, y, DOWN));
             } else if (mirror == '|')  { // split
                 cells.addAll(getValidSplitCells(grid, x - 1, y, UP, x + 1, y, DOWN));
-            } else if (mirror == '-') {
-                cells.addAll(getValidCell(grid, x, y - 1, dir));
             }
         } else if (dir == UP) {
-            if (mirror == '.') {
+            if (mirror == '.' || mirror == '|') {
                 cells.addAll(getValidCell(grid, x - 1, y, dir));
             } else if (mirror == '\\') {
                 cells.addAll(getValidCell(grid, x, y - 1, LEFT));
-            }
-            else if (mirror == '/') {
+            } else if (mirror == '/') {
                 cells.addAll(getValidCell(grid, x, y + 1, RIGHT));
-            }
-            else if (mirror == '|') {
-                cells.addAll(getValidCell(grid, x - 1, y, dir));
-            }
-            else if (mirror == '-') { // split
+            } else if (mirror == '-') { // split
                 cells.addAll(getValidSplitCells(grid, x, y - 1, LEFT, x, y + 1, RIGHT));
             }
         } else if (dir == DOWN) {
-            if (mirror == '.') {
+            if (mirror == '.' || mirror == '|') {
                 cells.addAll(getValidCell(grid, x + 1, y, dir));
             } else if (mirror == '\\') {
                 cells.addAll(getValidCell(grid, x, y + 1, RIGHT));
-            }
-            else if (mirror == '/') {
+            } else if (mirror == '/') {
                 cells.addAll(getValidCell(grid, x, y - 1, LEFT));
-            }
-            else if (mirror == '|') {
-                cells.addAll(getValidCell(grid, x + 1, y, dir));
-            }
-            else if (mirror == '-') {  // split
+            } else if (mirror == '-') {  // split
                 cells.addAll(getValidSplitCells(grid, x, y - 1, LEFT, x, y + 1, RIGHT));
             }
         }

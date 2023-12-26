@@ -20,13 +20,14 @@ public class Day16 {
         var grid = Utils.readGrid(fileName);
         //Utils.printGrid(grid);
 
+        var walkedCellKeys = new HashSet<String>();
         var counter = 0;
         var queue = new Stack<Cell>();
         queue.add(new Cell(0, 0, RIGHT));
         while (!queue.isEmpty()) {
             counter++;
             var cell = queue.pop();
-            var nextCells = traverse(grid, cell);
+            var nextCells = traverse(grid, cell, walkedCellKeys);
 
             if (!nextCells.isEmpty()) {
                 queue.addAll(nextCells);
@@ -51,18 +52,28 @@ public class Day16 {
     }
 
 
-    private List<Cell> getValidSplitCells(char[][] grid, int x, int y, Dir dir, int x2, int y2, Dir dir2) {
+    private List<Cell> getValidSplitCells(char[][] grid, int x, int y, Dir dir, int x2, int y2, Dir dir2, Set<String> walkedCellKeys) {
         var cells = new ArrayList<Cell>();
+        var key = x + "," + y;
         if(isValid(grid, x, y)) {
-            cells.add(new Cell(x, y, dir));
+            if (!walkedCellKeys.contains(key)) {
+                cells.add(new Cell(x, y, dir));
+                walkedCellKeys.add(key);
+            }
         }
+
+        key = x2+ "," + y2;
         if(isValid(grid, x2, y2)) {
-            cells.add(new Cell(x2, y2, dir2));
+            if (!walkedCellKeys.contains(key)) {
+                cells.add(new Cell(x2, y2, dir2));
+                walkedCellKeys.add(key);
+            }
         }
+
         return cells;
     }
 
-    private List<Cell> traverse(char[][] grid, Cell cell) {
+    private List<Cell> traverse(char[][] grid, Cell cell, Set<String> walkedCellKeys) {
         //System.out.printf("Traverse: cells=%s\n", cells);
         // x = row = UP/DOWN = grid.length, y = col = RIGHT/LEFT = grid[0].length
 
@@ -83,7 +94,7 @@ public class Day16 {
             } else if (mirror == '/') {
                 cells.addAll(getValidCell(grid, x - 1, y, UP));
             } else if (mirror == '|') { // split
-                cells.addAll(getValidSplitCells(grid, x - 1, y, UP, x + 1, y, DOWN));
+                cells.addAll(getValidSplitCells(grid, x - 1, y, UP, x + 1, y, DOWN, walkedCellKeys));
             }
         } else if (dir == LEFT) {
             if (mirror == '.' || mirror == '-') {
@@ -93,7 +104,7 @@ public class Day16 {
             } else if (mirror == '/') {
                 cells.addAll(getValidCell(grid, x + 1, y, DOWN));
             } else if (mirror == '|')  { // split
-                cells.addAll(getValidSplitCells(grid, x - 1, y, UP, x + 1, y, DOWN));
+                cells.addAll(getValidSplitCells(grid, x - 1, y, UP, x + 1, y, DOWN, walkedCellKeys));
             }
         } else if (dir == UP) {
             if (mirror == '.' || mirror == '|') {
@@ -103,7 +114,7 @@ public class Day16 {
             } else if (mirror == '/') {
                 cells.addAll(getValidCell(grid, x, y + 1, RIGHT));
             } else if (mirror == '-') { // split
-                cells.addAll(getValidSplitCells(grid, x, y - 1, LEFT, x, y + 1, RIGHT));
+                cells.addAll(getValidSplitCells(grid, x, y - 1, LEFT, x, y + 1, RIGHT, walkedCellKeys));
             }
         } else if (dir == DOWN) {
             if (mirror == '.' || mirror == '|') {
@@ -113,7 +124,7 @@ public class Day16 {
             } else if (mirror == '/') {
                 cells.addAll(getValidCell(grid, x, y - 1, LEFT));
             } else if (mirror == '-') {  // split
-                cells.addAll(getValidSplitCells(grid, x, y - 1, LEFT, x, y + 1, RIGHT));
+                cells.addAll(getValidSplitCells(grid, x, y - 1, LEFT, x, y + 1, RIGHT, walkedCellKeys));
             }
         }
 

@@ -151,6 +151,6 @@ public class Day16 {
         assertEquals(sum, 46);
 
         sum = runMain("src/aoc2023/Day16-input2.txt");
-        assertEquals(sum, 7748);
+        assertEquals(sum, 7748); // Wrong answer?
     }
 }

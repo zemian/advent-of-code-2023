@@ -44,6 +44,7 @@ public class Day14 {
             load += r * Utils.charsStream(grid[endIndex]).filter(x -> x == 'O').toList().size();
         }
 
+        System.out.println("Load " + load);
         return load;
     }
 

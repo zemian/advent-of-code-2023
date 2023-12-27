@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.function.Predicate.not;
 
@@ -55,6 +57,10 @@ public class Utils {
     public static void testReadGrid() {
         var grid = readGrid("src/aoc2023/Day10-input1a.txt");
         printGrid(grid);
+    }
+
+    public static Stream<Character> charsStream(char[] chars) {
+        return IntStream.range(0, chars.length).mapToObj(i -> chars[i]);
     }
 
     public static record Tuple2<A, B>(A a, B b){}

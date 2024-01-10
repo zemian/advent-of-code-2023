@@ -93,7 +93,7 @@ public class Day8b {
         Long sum = runMain("src/aoc2023/Day8b-input1.txt");
         assertEquals(sum, 6L);
 
-        sum = runMain("src/aoc2023/Day8b-input2.txt");
+        sum = runMain("aoc2023/Day8b-input2.txt");
         assertEquals(sum, 0L);
     }
 }

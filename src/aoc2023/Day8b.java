@@ -93,7 +93,12 @@ public class Day8b {
         Long sum = runMain("src/aoc2023/Day8b-input1.txt");
         assertEquals(sum, 6L);
 
+        /*
+        Match found: [ZZZ, KRZ, KMZ, XQZ, LSZ, CHZ]
+        Steps: 12315788159977
+        Time: PT483H53M35.713462S => 20+ Days!
+        */
         sum = runMain("aoc2023/Day8b-input2.txt");
-        assertEquals(sum, 0L);
+        assertEquals(sum, 12315788159977L);
     }
 }

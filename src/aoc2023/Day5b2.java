@@ -22,7 +22,7 @@ public class Day5b2 {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("src/aoc2023/Day5-input1.txt");
+            program.runMain("src/aoc2023/Day5-input2.txt");
         }
     }
 

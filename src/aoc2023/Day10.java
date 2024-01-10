@@ -9,7 +9,7 @@ public class Day10 {
             program.runTests();
             System.out.println("Tests passed.");
         } else {
-            program.runMain("src/aoc2023/DayTemplate-input2.txt");
+            program.runMain("src/aoc2023/Day10-input2.txt");
         }
     }
 
